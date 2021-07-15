@@ -1,0 +1,14 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/.vs/MDReader/v16
+/MDReader/bin/x86/Debug
+/MDReader/obj
+/.vs/Stream/v16
+/Stream/bin/x86/Debug
+/Stream/obj
+/Stream/AppPackages
+/Stream/bin
+/Stream/BundleArtifacts
+/.vs

@@ -1,0 +1,89 @@
+﻿<Page
+    x:Class="Stream.Views.MainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Stream.Components"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:mux="using:Microsoft.UI.Xaml.Controls" xmlns:icons="using:Fluent.Icons"
+    mc:Ignorable="d"
+    Background="{ThemeResource SystemBaseLowColor}"
+    RequestedTheme="Default">
+
+    <Grid Background="{ThemeResource SystemAltHighColor}">
+        <Grid.RowDefinitions>
+            <!-- Title bar -->
+            <RowDefinition Height="Auto"/>
+            <!-- Command bar -->
+            <RowDefinition Height="Auto"/>
+            <!-- Content -->
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- Title bar -->
+        <Grid Grid.Row="0" x:Name="customTitleBar" Height="32" Background="{ThemeResource SystemAltHighColor}">
+            <TextBlock Text="STREAM" x:Name="title" Style="{ThemeResource CaptionTextBlockStyle}" Margin="10,10,0,0"
+                       FontFamily="Lucida Console"/>
+        </Grid>
+
+        <!-- Command bar -->
+        <Grid Grid.Row="1">
+            <Border Background="{ThemeResource SystemChromeMediumLowColor}">
+                <CommandBar IsOpen="True" DefaultLabelPosition="Right">
+                    <!-- Open file -->
+                    <AppBarButton Icon="OpenFile" Label="Open..." Click="OpenFilePickerAsync">
+                        <AppBarButton.KeyboardAccelerators>
+                            <KeyboardAccelerator Modifiers="Control" Key="O"/>
+                        </AppBarButton.KeyboardAccelerators>
+                    </AppBarButton>
+                    <!-- New window -->
+                    <AppBarButton Icon="NewWindow" Label="New window" Click="AddWindowAsync">
+                        <AppBarButton.KeyboardAccelerators>
+                            <KeyboardAccelerator Modifiers="Control" Key="N"/>
+                        </AppBarButton.KeyboardAccelerators>
+                    </AppBarButton>
+                    <!-- Arrange -->
+                    <AppBarButton Icon="ViewAll" Label="Arrange">
+                        <AppBarButton.KeyboardAccelerators>
+                            <KeyboardAccelerator Modifiers="Control" Key="A"/>
+                        </AppBarButton.KeyboardAccelerators>
+                        <AppBarButton.Flyout>
+                            <MenuFlyout>
+                                <MenuFlyoutItem Text="Columns" Click="ArrangeColumns">
+                                    <MenuFlyoutItem.Icon>
+                                        <icons:FluentIconElement Symbol="ColumnTriple24"/>
+                                    </MenuFlyoutItem.Icon>
+                                    <MenuFlyoutItem.KeyboardAccelerators>
+                                        <KeyboardAccelerator Modifiers="Control" Key="Number1"/>
+                                    </MenuFlyoutItem.KeyboardAccelerators>
+                                </MenuFlyoutItem>
+                                <MenuFlyoutItem Text="Rows" Click="ArrangeRows">
+                                    <MenuFlyoutItem.Icon>
+                                        <icons:FluentIconElement Symbol="RowTriple24"/>
+                                    </MenuFlyoutItem.Icon>
+                                    <MenuFlyoutItem.KeyboardAccelerators>
+                                        <KeyboardAccelerator Modifiers="Control" Key="Number2"/>
+                                    </MenuFlyoutItem.KeyboardAccelerators>
+                                </MenuFlyoutItem>
+                                <MenuFlyoutItem Text="Grid" Click="ArrangeGrid">
+                                    <MenuFlyoutItem.Icon>
+                                        <icons:FluentIconElement Symbol="Grid16"/>
+                                    </MenuFlyoutItem.Icon>
+                                    <MenuFlyoutItem.KeyboardAccelerators>
+                                        <KeyboardAccelerator Modifiers="Control" Key="Number3"/>
+                                    </MenuFlyoutItem.KeyboardAccelerators>
+                                </MenuFlyoutItem>
+                            </MenuFlyout>
+                        </AppBarButton.Flyout>
+                    </AppBarButton>
+                </CommandBar>
+            </Border>
+        </Grid>
+
+        <!-- Content -->
+        <Canvas x:Name="content" Grid.Row="2">
+
+        </Canvas>
+
+    </Grid>
+</Page>
