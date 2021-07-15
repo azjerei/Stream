@@ -6,22 +6,27 @@
     xmlns:models="using:Stream.Models"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:mux="using:Microsoft.UI.Xaml.Controls" xmlns:icons="using:Fluent.Icons"
+    xmlns:mux="using:Microsoft.UI.Xaml.Controls" 
+    xmlns:icons="using:Fluent.Icons" 
     mc:Ignorable="d"
     Width="640"
     Height="480">
 
     <Grid x:Name="ContainerGrid"
-          Background="Transparent"
-          BorderBrush="{ThemeResource SystemBaseLowColor}"
-          BorderThickness="1"
-          CornerRadius="4"
-          ManipulationMode="TranslateX,TranslateY,Scale"
-          ManipulationStarted="ContainerGrid_ManipulationStarted"
-          ManipulationDelta="ContainerGrid_ManipulationDelta">
+              Grid.Row="0"
+              Grid.Column="0"
+              Background="Transparent"
+              BorderBrush="{ThemeResource SystemBaseLowColor}"
+              BorderThickness="1"
+              ManipulationMode="TranslateX,TranslateY,Scale"
+              ManipulationStarted="ContainerGrid_ManipulationStarted"
+              ManipulationDelta="ContainerGrid_ManipulationDelta">
         <Grid.RowDefinitions>
+            <!-- Commands -->
             <RowDefinition Height="40"/>
+            <!-- Content -->
             <RowDefinition Height="*"/>
+            <!-- Resize handle -->
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <Grid.Shadow>
@@ -30,160 +35,127 @@
 
         <!-- Commands -->
         <Border Grid.Row="0"
-                CornerRadius="2,2,0,0"
-                PointerEntered="EnableMove"
-                PointerExited="DisableMove"
-                Background="{ThemeResource SystemControlAcrylicElementBrush}">
+                    PointerEntered="EnableMove"
+                    PointerExited="DisableMove"
+                    Background="{ThemeResource SystemControlAcrylicElementBrush}">
             <CommandBar Background="Transparent" 
-                        IsOpen="False"
-                        DefaultLabelPosition="Right">
+                            IsOpen="True"
+                            DefaultLabelPosition="Collapsed">
                 <CommandBar.PrimaryCommands>
-                    <AppBarToggleButton Label="Autoscroll" 
-                                            IsChecked="true"
-                                            x:Name="AutoscrollToggle">
+                    <AppBarToggleButton ToolTipService.Placement="Top" ToolTipService.ToolTip="Autoscroll" IsChecked="true" 
+                                            x:Name="AutoscrollToggle" Width="48">
                         <AppBarToggleButton.Icon>
                             <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE74B;"/>
                         </AppBarToggleButton.Icon>
                     </AppBarToggleButton>
+                    <AppBarButton Icon="Setting" ToolTipService.Placement="Top" ToolTipService.ToolTip="Configure..."  
+                                      x:Name="ConfigToggle" Click="OpenConfiguration" Width="48"/>
+                    <AppBarSeparator/>
+                    <AppBarButton Icon="Cancel" ToolTipService.Placement="Top" ToolTipService.ToolTip="Close window" 
+                                      Click="CloseWindow" Width="48"/>
                 </CommandBar.PrimaryCommands>
-                <CommandBar.SecondaryCommands>
-                    <AppBarButton Icon="Setting" 
-                                  x:Name="ConfigToggle"
-                                  Label="Configure"
-                                  Click="OpenConfiguration"/>
-                    <AppBarButton Icon="Cancel" 
-                                  Label="Close"
-                                  Click="CloseWindow"/>
-                </CommandBar.SecondaryCommands>
             </CommandBar>
         </Border>
 
         <!-- Content -->
-        <ScrollViewer x:Name="ContentScroll" 
-                      Grid.Row="1"
-                      Background="{ThemeResource SystemAltHighColor}">
-            <TextBlock x:Name="TextContent"
-                       Padding="10"/>
+        <ScrollViewer x:Name="ContentScroll" Grid.Row="1" Background="{ThemeResource SystemAltHighColor}">
+            <TextBlock x:Name="TextContent" Padding="10"/>
         </ScrollViewer>
 
         <!-- Configuration -->
-        <ScrollViewer x:Name="ConfigView"
-                      Grid.Row="1"
-                      Visibility="Collapsed">
-            <VariableSizedWrapGrid Background="{ThemeResource SystemAltHighColor}"
-                                   Orientation="Horizontal"
-                                   MaximumRowsOrColumns="2">
+        <ScrollViewer x:Name="ConfigView" Grid.Row="1" Visibility="Collapsed">
+            <VariableSizedWrapGrid Background="{ThemeResource SystemAltHighColor}" Orientation="Horizontal" MaximumRowsOrColumns="2">
                 <!-- Filtering -->
                 <StackPanel Margin="10">
-                    <TextBox x:Name="Filter" 
-                             Header="Filter" 
-                             MinWidth="200"
-                             MaxWidth="500"
-                             HorizontalAlignment="Left"
-                             Height="60"/>
+                    <TextBox x:Name="Filter" Header="Filter" MinWidth="200" MaxWidth="500" HorizontalAlignment="Left" Height="60"/>
                     <mux:RadioButtons SelectedItem="OptionContains">
                         <RadioButton x:Name="OptionStartsWith" Tag="StartsWith" Content="Starts with" Checked="FilterTypeChecked"/>
                         <RadioButton x:Name="OptionEndsWith" Tag="EndsWith" Content="Ends with" Checked="FilterTypeChecked"/>
                         <RadioButton x:Name="OptionContains" Tag="Contains" Content="Contains" Checked="FilterTypeChecked"/>
                         <RadioButton x:Name="OptionRegExp" Tag="RegExp" Content="Regular Expression" Checked="FilterTypeChecked"/>
                     </mux:RadioButtons>
-                    <CheckBox x:Name="OptionIgnoreCase" 
-                              Margin="0,10"
-                              Content="Ignore case"
-                              Checked="IgnoreCaseChecked"
-                              Unchecked="IgnoreCaseUnchecked"/>
+                    <CheckBox x:Name="OptionIgnoreCase" Margin="0,10" Content="Ignore case" Checked="IgnoreCaseChecked" 
+                                  Unchecked="IgnoreCaseUnchecked"/>
                 </StackPanel>
                 <!-- Highlighting -->
                 <StackPanel Margin="10">
-                   <!--<TextBlock Text="Highlight text"/>
-                    <Grid x:Name="Highlights">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="*"/>
-                        </Grid.RowDefinitions>
-                        <StackPanel Orientation="Horizontal" 
-                                    Margin="0,2,0,10"
-                                    Grid.Row="0">
-                            <TextBox MinWidth="150"
-                                     MaxHeight="400"
-                                     HorizontalAlignment="Left"
-                                     Height="38"
-                                     ToolTipService.ToolTip="Use commas to separate multiple words."
-                                     x:Name="Highlight1"/>  
-                            <Rectangle Fill="Salmon"
-                                       x:Name="ColorRect1"
-                                       Width="40"
-                                       Height="40"
-                                       RadiusX="2"
-                                       RadiusY="2"
-                                       Margin="10,0,0,0"/>
-                        </StackPanel>
-                        <StackPanel Orientation="Horizontal" 
-                                    Margin="0,2,0,10"
-                                    Grid.Row="1">
-                            <TextBox MinWidth="150"
-                                     MaxHeight="400"
-                                     HorizontalAlignment="Left"
-                                     Height="38"
-                                     ToolTipService.ToolTip="Use commas to separate multiple words."
-                                     x:Name="Highlight2"/>
-                            <Rectangle Fill="BlueViolet"
-                                       x:Name="ColorRect2"
-                                       Width="40"
-                                       Height="40"
-                                       RadiusX="2"
-                                       RadiusY="2"
-                                       Margin="10,0,0,0"/>
-                        </StackPanel>
-                        <StackPanel Orientation="Horizontal" 
-                                    Margin="0,2,0,10"
-                                    Grid.Row="2">
-                            <TextBox MinWidth="150"
-                                     MaxHeight="400"
-                                     HorizontalAlignment="Left"
-                                     Height="38"
-                                     ToolTipService.ToolTip="Use commas to separate multiple words."
-                                     x:Name="Highlight3"/>
-                            <Rectangle Fill="DeepSkyBlue"
-                                       x:Name="ColorRect3"
-                                       Width="40"
-                                       Height="40"
-                                       RadiusX="2"
-                                       RadiusY="2"
-                                       Margin="10,0,0,0"/>
-                        </StackPanel>
-                    </Grid>-->
-                    <StackPanel Orientation="Horizontal"
-                                HorizontalAlignment="Right">
+                    <!--<TextBlock Text="Highlight text"/>
+                        <Grid x:Name="Highlights">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <StackPanel Orientation="Horizontal" 
+                                        Margin="0,2,0,10"
+                                        Grid.Row="0">
+                                <TextBox MinWidth="150"
+                                         MaxHeight="400"
+                                         HorizontalAlignment="Left"
+                                         Height="38"
+                                         ToolTipService.ToolTip="Use commas to separate multiple words."
+                                         x:Name="Highlight1"/>  
+                                <Rectangle Fill="Salmon"
+                                           x:Name="ColorRect1"
+                                           Width="40"
+                                           Height="40"
+                                           RadiusX="2"
+                                           RadiusY="2"
+                                           Margin="10,0,0,0"/>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" 
+                                        Margin="0,2,0,10"
+                                        Grid.Row="1">
+                                <TextBox MinWidth="150"
+                                         MaxHeight="400"
+                                         HorizontalAlignment="Left"
+                                         Height="38"
+                                         ToolTipService.ToolTip="Use commas to separate multiple words."
+                                         x:Name="Highlight2"/>
+                                <Rectangle Fill="BlueViolet"
+                                           x:Name="ColorRect2"
+                                           Width="40"
+                                           Height="40"
+                                           RadiusX="2"
+                                           RadiusY="2"
+                                           Margin="10,0,0,0"/>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" 
+                                        Margin="0,2,0,10"
+                                        Grid.Row="2">
+                                <TextBox MinWidth="150"
+                                         MaxHeight="400"
+                                         HorizontalAlignment="Left"
+                                         Height="38"
+                                         ToolTipService.ToolTip="Use commas to separate multiple words."
+                                         x:Name="Highlight3"/>
+                                <Rectangle Fill="DeepSkyBlue"
+                                           x:Name="ColorRect3"
+                                           Width="40"
+                                           Height="40"
+                                           RadiusX="2"
+                                           RadiusY="2"
+                                           Margin="10,0,0,0"/>
+                            </StackPanel>
+                        </Grid>-->
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
                         <!-- Apply button -->
-                        <Button Content="Apply"
-                                Style="{ThemeResource AccentButtonStyle}"
-                                Margin="0,30"
-                                Click="ApplyConfiguration"/>
+                        <Button Content="Apply" Style="{ThemeResource AccentButtonStyle}" Margin="0,30" Click="ApplyConfiguration"/>
                         <!-- Cancel button -->
-                        <Button Content="Cancel"
-                                Margin="10,0,0,0"
-                                Style="{ThemeResource ButtonRevealStyle}"
-                                Click="CloseConfiguration"/>
+                        <Button Content="Cancel" Margin="10,0,0,0" Style="{ThemeResource ButtonRevealStyle}" Click="CloseConfiguration"/>
                     </StackPanel>
                 </StackPanel>
             </VariableSizedWrapGrid>
         </ScrollViewer>
 
         <!-- Resizer layer -->
-        <Grid Grid.Row="2"
-              Background="{ThemeResource SystemAltHighColor}">
-            <icons:FluentIconElement Symbol="CaretDownLeft24" 
-                                     HorizontalAlignment="Right" />
-            <Rectangle x:Name="ResizeRectangle"
-                           IsHitTestVisible="False"
-                           Width="16"
-                           Height="16"
-                           Fill="Transparent"
-                           VerticalAlignment="Bottom"
-                           HorizontalAlignment="Right"/>
-        </Grid>
+        <Grid Grid.Row="2" Background="{ThemeResource SystemAltHighColor}">
+                
+        <icons:FluentIconElement Symbol="CaretDownLeft24" HorizontalAlignment="Right" />
+        
+                <Rectangle x:Name="ResizeRectangle" IsHitTestVisible="False" Width="16" Height="16" Fill="White" 
+                           VerticalAlignment="Bottom" HorizontalAlignment="Right"/>
+            </Grid>
     </Grid>
 </UserControl>
