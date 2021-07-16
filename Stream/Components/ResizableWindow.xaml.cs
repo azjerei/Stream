@@ -44,6 +44,7 @@ namespace Stream.Components
         {
             if (text.Length > this.textLength || this.forceTextRedraw)
             {
+                this.TextContent.Items.Clear();
                 this.textLength = text.Length;
                 this.forceTextRedraw = false;
 
@@ -92,24 +93,18 @@ namespace Stream.Components
 
                         if (add)
                         {
-                            textLines.Add($"{n,-10} {line}");
+                            this.TextContent.Items.Add(new TextLine()
+                            {
+                                LineText = new LineText()
+                                {
+                                    LineNumber = n,
+                                    Text = line,
+                                },
+                            });
                         }
 
                         n++;
                     }
-
-                    var lineNumber = 1;
-                    textLines.ForEach((line =>
-                    {
-                        this.TextContent.Items.Add(new TextLine()
-                        {
-                            LineText = new LineText()
-                            {
-                                LineNumber = lineNumber++,
-                                Text = line,
-                            },
-                        });
-                    }));
                 }
                 else
                 {
@@ -130,7 +125,10 @@ namespace Stream.Components
 
             if (this.AutoscrollToggle.IsChecked ?? true)
             {
-                this.TextContent.ScrollIntoView(this.TextContent.Items[this.TextContent.Items.Count - 1]);
+                if (this.TextContent.Items.Any())
+                {
+                    this.TextContent.ScrollIntoView(this.TextContent.Items[this.TextContent.Items.Count - 1]);
+                }
             }
         }
 
