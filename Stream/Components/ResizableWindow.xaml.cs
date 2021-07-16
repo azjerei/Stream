@@ -13,7 +13,7 @@ using Windows.UI.Xaml.Input;
 
 namespace Stream.Components
 {
-    public sealed partial class ResizableWindow : Page
+    public sealed partial class ResizableWindow : UserControl
     {
         public Guid Id { get; }
 
@@ -96,11 +96,33 @@ namespace Stream.Components
                         n++;
                     }
 
-                    this.TextContent.Text = string.Join('\n', textLines);
+                    var lineNumber = 1;
+                    textLines.ForEach((line =>
+                    {
+                        this.TextContent.Items.Add(new TextLine()
+                        {
+                            LineText = new LineText()
+                            {
+                                LineNumber = lineNumber++,
+                                Text = line,
+                            },
+                        });
+                    }));
                 }
                 else
                 {
-                    this.TextContent.Text = string.Join('\n', lines.Select((t, i) => $"{i + 1,-10} {t}").ToList());
+                    var lineNumber = 1;
+                    lines.ToList().ForEach(line =>
+                    {
+                        this.TextContent.Items.Add(new TextLine()
+                        {
+                            LineText = new LineText()
+                            {
+                                LineNumber = lineNumber++,
+                                Text = line,
+                            },
+                        });
+                    });
                 }
             }
 
@@ -118,14 +140,14 @@ namespace Stream.Components
 
         public void SelectLine(int lineNumber)
         {
-            //var item = this.TextContent.Items.Where(i => (i as TextLine).LineText.LineNumber.Equals(lineNumber));
-            //if (item.Any())
-            //{
-            //    this.TextContent.SelectedItem = item.First();
-            //    this.TextContent.ScrollIntoView(this.TextContent.SelectedItem);
+            var item = this.TextContent.Items.Where(i => (i as TextLine).LineText.LineNumber.Equals(lineNumber));
+            if (item.Any())
+            {
+                this.TextContent.SelectedItem = item.First();
+                this.TextContent.ScrollIntoView(this.TextContent.SelectedItem);
 
-            //    this.AutoscrollToggle.IsChecked = false;
-            //}
+                this.AutoscrollToggle.IsChecked = false;
+            }
         }
 
         private void ContainerGrid_ManipulationStarted(object sender, ManipulationStartedRoutedEventArgs e)

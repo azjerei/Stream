@@ -1,4 +1,4 @@
-﻿<Page
+﻿<UserControl
     x:Class="Stream.Components.ResizableWindow"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -54,7 +54,17 @@
 
         <!-- Content -->
         <ScrollViewer x:Name="ContentScroll" Grid.Row="1" Background="{ThemeResource SystemAltHighColor}">
-            <TextBlock x:Name="TextContent" Padding="10"/>
+            <!--<TextBlock x:Name="TextContent" Padding="10"/>-->
+            <ListView x:Name="TextContent" Padding="10" SelectionChanged="LineSelected">
+                <ListView.ItemTemplate>
+                    <DataTemplate x:DataType="local:TextLine">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="{x:Bind LineText.LineNumber}" Foreground="{ThemeResource AppBarItemForegroundThemeBrush}" Width="100"/>
+                            <TextBlock Text="{x:Bind LineText.Text}" Foreground="{ThemeResource AppBarItemForegroundThemeBrush}"/>
+                        </StackPanel>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
         </ScrollViewer>
 
         <!-- Configuration -->
@@ -159,4 +169,4 @@
                            VerticalAlignment="Bottom" HorizontalAlignment="Right"/>
         </Grid>
     </Grid>
-</Page>
+</UserControl>
