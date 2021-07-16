@@ -46,7 +46,7 @@ namespace Stream.Views
             {
                 if (!window.Id.Equals(caller))
                 {
-                    window.SelectLineAsync(lineNumber).ConfigureAwait(true);
+                    window.SelectLine(lineNumber);
                 }
             }
         }

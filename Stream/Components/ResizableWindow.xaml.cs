@@ -137,14 +137,13 @@ namespace Stream.Components
             CheckSizeConstraints(width, height);
         }
 
-        public async Task SelectLineAsync(int lineNumber)
+        public void SelectLine(int lineNumber)
         {
             var item = this.TextContent.Items.Where(i => (i as TextLine).LineText.LineNumber.Equals(lineNumber));
             if (item.Any())
             {
                 this.AutoscrollToggle.IsChecked = false;
                 this.TextContent.SelectedItem = item.First();
-                //await this.TextContent.ScrollToItemAsync(this.TextContent.SelectedItem);
                 this.TextContent.ScrollIntoView(this.TextContent.SelectedItem);
             }
         }
