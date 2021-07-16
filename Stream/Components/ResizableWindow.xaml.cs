@@ -184,6 +184,7 @@ namespace Stream.Components
         {
             this.TextContent.Visibility = Visibility.Collapsed;
             this.ConfigView.Visibility = Visibility.Visible;
+            this.SlideInStoryboard.Begin();
         }
 
         private void CloseConfiguration(object sender, RoutedEventArgs e)

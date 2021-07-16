@@ -59,7 +59,16 @@
 
         <!-- Configuration -->
         <ScrollViewer x:Name="ConfigView" Grid.Row="1" Visibility="Collapsed">
-            <VariableSizedWrapGrid Background="{ThemeResource SystemAltHighColor}" Orientation="Horizontal" MaximumRowsOrColumns="2">
+            <!-- Slide animation -->
+            <ScrollViewer.Resources>
+                <Storyboard x:Name="SlideInStoryboard">
+                    <RepositionThemeAnimation TargetName="ConfigGrid" FromVerticalOffset="-200"/>
+                    <DoubleAnimation Storyboard.TargetName="ConfigGrid" Storyboard.TargetProperty="Opacity"
+                                     To="1" From="0.25"/>
+                </Storyboard>
+            </ScrollViewer.Resources>
+            
+            <VariableSizedWrapGrid x:Name="ConfigGrid" Background="{ThemeResource SystemAltHighColor}" Orientation="Horizontal" MaximumRowsOrColumns="2">
                 <!-- Filtering -->
                 <StackPanel Margin="10">
                     <TextBox x:Name="Filter" Header="Filter" MinWidth="200" MaxWidth="500" HorizontalAlignment="Left" Height="60"/>
