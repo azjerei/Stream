@@ -1,4 +1,4 @@
-﻿<UserControl
+﻿<Page
     x:Class="Stream.Components.ResizableWindow"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -18,12 +18,12 @@
               Background="Transparent"
               BorderBrush="{ThemeResource SystemBaseLowColor}"
               BorderThickness="1"
-              ManipulationMode="TranslateX,TranslateY,Scale"
+              ManipulationMode="TranslateX,TranslateY"
               ManipulationStarted="ContainerGrid_ManipulationStarted"
               ManipulationDelta="ContainerGrid_ManipulationDelta">
         <Grid.RowDefinitions>
             <!-- Commands -->
-            <RowDefinition Height="40"/>
+            <RowDefinition Height="48"/>
             <!-- Content -->
             <RowDefinition Height="*"/>
             <!-- Resize handle -->
@@ -34,13 +34,8 @@
         </Grid.Shadow>
 
         <!-- Commands -->
-        <Border Grid.Row="0"
-                    PointerEntered="EnableMove"
-                    PointerExited="DisableMove"
-                    Background="{ThemeResource SystemControlAcrylicElementBrush}">
-            <CommandBar Background="Transparent" 
-                            IsOpen="True"
-                            DefaultLabelPosition="Collapsed">
+        <Border x:Name="MoveRectangle" Grid.Row="0" Background="{ThemeResource SystemControlAcrylicElementBrush}">
+            <CommandBar Background="Transparent" IsOpen="True" DefaultLabelPosition="Collapsed">
                 <CommandBar.PrimaryCommands>
                     <AppBarToggleButton ToolTipService.Placement="Top" ToolTipService.ToolTip="Autoscroll" IsChecked="true" 
                                             x:Name="AutoscrollToggle" Width="48">
@@ -151,11 +146,8 @@
 
         <!-- Resizer layer -->
         <Grid Grid.Row="2" Background="{ThemeResource SystemAltHighColor}">
-                
-        <icons:FluentIconElement Symbol="CaretDownLeft24" HorizontalAlignment="Right" />
-        
-                <Rectangle x:Name="ResizeRectangle" IsHitTestVisible="False" Width="16" Height="16" Fill="White" 
+            <Rectangle x:Name="ResizeRectangle" IsHitTestVisible="False" Width="16" Height="16" Fill="{ThemeResource SystemBaseLowColor}" 
                            VerticalAlignment="Bottom" HorizontalAlignment="Right"/>
-            </Grid>
+        </Grid>
     </Grid>
-</UserControl>
+</Page>

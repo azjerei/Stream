@@ -13,7 +13,7 @@ using Windows.UI.Xaml.Input;
 
 namespace Stream.Components
 {
-    public sealed partial class ResizableWindow : UserControl
+    public sealed partial class ResizableWindow : Page
     {
         public Guid Id { get; }
 
@@ -130,14 +130,11 @@ namespace Stream.Components
 
         private void ContainerGrid_ManipulationStarted(object sender, ManipulationStartedRoutedEventArgs e)
         {
-            if (e.Position.X > Width - ResizeRectangle.Width && e.Position.Y > Height - ResizeRectangle.Height)
-            {
-                this.isResizing = true;
-            }
-            else
-            {
-                this.isResizing = false;
-            }
+            this.isResizing = e.Position.X > Width - this.ResizeRectangle.Width && 
+                              e.Position.Y > Height - this.ResizeRectangle.Height;
+
+            this.canMove = e.Position.X > Width - this.MoveRectangle.ActualWidth && 
+                           e.Position.Y < this.MoveRectangle.ActualHeight;
         }
 
         private void ContainerGrid_ManipulationDelta(object sender, ManipulationDeltaRoutedEventArgs e)
@@ -230,16 +227,6 @@ namespace Stream.Components
         {
             Stream.Configuration.Configuration.RemoveWindowConfiguration(this.Id);
             this.owner.RemoveWindow(this);
-        }
-
-        private void EnableMove(object sender, PointerRoutedEventArgs e)
-        {
-            this.canMove = true;
-        }
-
-        private void DisableMove(object sender, PointerRoutedEventArgs e)
-        {
-            this.canMove = false;
         }
 
         private bool isResizing;
