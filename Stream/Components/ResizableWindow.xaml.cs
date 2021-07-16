@@ -130,7 +130,7 @@ namespace Stream.Components
 
         public void SelectLine(int lineNumber)
         {
-            var item = this.TextContent.Items.Where(i => (i as TextLine).LineText.LineNumber.Equals(lineNumber));
+            var item = this.TextContent.Items.Where(i => (i as LineText).LineNumber.Equals(lineNumber));
             if (item.Any())
             {
                 this.AutoscrollToggle.IsChecked = false;
@@ -186,7 +186,7 @@ namespace Stream.Components
         {
             if (e.AddedItems.Any())
             {
-                var lineNumber = (e.AddedItems.First() as TextLine).LineText.LineNumber;
+                var lineNumber = (e.AddedItems.First() as LineText).LineNumber;
                 this.owner.OnLineSelected(this.Id, lineNumber);
             }
         }

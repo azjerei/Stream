@@ -24,6 +24,6 @@
             Height="16"
             x:Name="TextContent"
             Style="{ThemeResource CaptionTextBlockStyle}"
-            Text="{Binding Text}"/>
+            />
     </Grid>
 </UserControl>

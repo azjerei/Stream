@@ -19,7 +19,7 @@ namespace Stream.Components
         public string Text
         {
             get { return (string)GetValue(TextProperty); }
-            set { SetValue(TextProperty, value); }
+            set { SetValue(TextProperty, value); this.HighlightText(value); }
         }
 
         public static readonly DependencyProperty LineNumberProperty = DependencyProperty.Register(
@@ -32,29 +32,6 @@ namespace Stream.Components
         {
             get { return (int)GetValue(LineNumberProperty); }
             set { SetValue(LineNumberProperty, value); }
-        }
-
-        public LineText LineText 
-        {
-            get => this.content;
-            set
-            {
-                //var highlightText = string.Empty;
-
-                //if (value.Text.Contains("[;"))
-                //{
-                //    highlightText = value.Text;
-                //    value.Text = string.Empty;
-                //}
-
-                this.content = value;
-                this.DataContext = value;
-
-                //if (!string.IsNullOrEmpty(highlightText))
-                //{
-                //    HighlightText(highlightText);
-                //}
-            }
         }
 
         public TextLine()
@@ -106,7 +83,5 @@ namespace Stream.Components
                 }
             }
         }
-
-        private LineText content;
     }
 }
