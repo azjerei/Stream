@@ -1,10 +1,12 @@
 ﻿using Stream.Configuration;
+using Stream.Extensions;
 using Stream.Models;
 using Stream.Views;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.UI;
 using Windows.UI.Xaml;
@@ -126,11 +128,11 @@ namespace Stream.Components
                 }
             }
 
-            if (this.AutoscrollToggle.IsChecked ?? true)
-            {
-                this.ContentScroll.Measure(new Size(Window.Current.Bounds.Width, Window.Current.Bounds.Height));
-                this.ContentScroll.ChangeView(null, this.ContentScroll.ScrollableHeight, null);
-            }
+            //if (this.AutoscrollToggle.IsChecked ?? true)
+            //{
+            //    this.ContentScroll.Measure(new Size(Window.Current.Bounds.Width, Window.Current.Bounds.Height));
+            //    this.ContentScroll.ChangeView(null, this.ContentScroll.ScrollableHeight, null);
+            //}
         }
 
         public void OnSizeChanged(double width, double height)
@@ -138,15 +140,15 @@ namespace Stream.Components
             CheckSizeConstraints(width, height);
         }
 
-        public void SelectLine(int lineNumber)
+        public async Task SelectLineAsync(int lineNumber)
         {
             var item = this.TextContent.Items.Where(i => (i as TextLine).LineText.LineNumber.Equals(lineNumber));
             if (item.Any())
             {
-                this.TextContent.SelectedItem = item.First();
-                this.TextContent.ScrollIntoView(this.TextContent.SelectedItem);
-
                 this.AutoscrollToggle.IsChecked = false;
+                this.TextContent.SelectedItem = item.First();
+                //await this.TextContent.ScrollToItemAsync(this.TextContent.SelectedItem);
+                this.TextContent.ScrollIntoView(this.TextContent.SelectedItem);
             }
         }
 
