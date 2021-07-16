@@ -128,11 +128,10 @@ namespace Stream.Components
                 }
             }
 
-            //if (this.AutoscrollToggle.IsChecked ?? true)
-            //{
-            //    this.ContentScroll.Measure(new Size(Window.Current.Bounds.Width, Window.Current.Bounds.Height));
-            //    this.ContentScroll.ChangeView(null, this.ContentScroll.ScrollableHeight, null);
-            //}
+            if (this.AutoscrollToggle.IsChecked ?? true)
+            {
+                this.TextContent.ScrollIntoView(this.TextContent.Items[this.TextContent.Items.Count - 1]);
+            }
         }
 
         public void OnSizeChanged(double width, double height)
