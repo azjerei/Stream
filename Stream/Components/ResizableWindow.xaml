@@ -56,18 +56,19 @@
         <!--<TextBlock x:Name="TextContent" Padding="10"/>-->
         <ListView x:Name="TextContent" Grid.Row="1" Padding="10" SelectionChanged="LineSelected">
             <ListView.ItemTemplate>
-                <DataTemplate x:DataType="local:TextLine">
-                    <StackPanel Orientation="Horizontal">
+                <DataTemplate x:DataType="models:LineText">
+                    <local:TextLine Text="{x:Bind Text}" LineNumber="{x:Bind LineNumber}"/>
+                    <!--<StackPanel Orientation="Horizontal">
                         <TextBlock Text="{x:Bind LineText.LineNumber}" Foreground="{ThemeResource AppBarItemForegroundThemeBrush}" Width="100"/>
                         <TextBlock Text="{x:Bind LineText.Text}" Foreground="{ThemeResource AppBarItemForegroundThemeBrush}"/>
-                    </StackPanel>
+                    </StackPanel>-->
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>
 
         <!-- Configuration -->
         <ScrollViewer x:Name="ConfigView" Grid.Row="1" Visibility="Collapsed">
-            <!-- Slide animation -->
+            <!-- Slide & fade animation -->
             <ScrollViewer.Resources>
                 <Storyboard x:Name="SlideInStoryboard">
                     <RepositionThemeAnimation TargetName="ConfigGrid" FromVerticalOffset="-200"/>
@@ -91,7 +92,7 @@
                 </StackPanel>
                 <!-- Highlighting -->
                 <StackPanel Margin="10">
-                    <!--<TextBlock Text="Highlight text"/>
+                    <TextBlock Text="Highlight text"/>
                         <Grid x:Name="Highlights">
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto"/>
@@ -150,7 +151,7 @@
                                            RadiusY="2"
                                            Margin="10,0,0,0"/>
                             </StackPanel>
-                        </Grid>-->
+                        </Grid>
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
                         <!-- Apply button -->
                         <Button Content="Apply" Style="{ThemeResource AccentButtonStyle}" Margin="0,30" Click="ApplyConfiguration"/>

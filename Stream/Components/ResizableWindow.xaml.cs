@@ -1,13 +1,10 @@
 ﻿using Stream.Configuration;
-using Stream.Extensions;
 using Stream.Models;
 using Stream.Views;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using Windows.Foundation;
 using Windows.UI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -93,13 +90,10 @@ namespace Stream.Components
 
                         if (add)
                         {
-                            this.TextContent.Items.Add(new TextLine()
+                            this.TextContent.Items.Add(new LineText()
                             {
-                                LineText = new LineText()
-                                {
-                                    LineNumber = n,
-                                    Text = line,
-                                },
+                                LineNumber = n,
+                                Text = this.Highlight(line),
                             });
                         }
 
@@ -111,13 +105,10 @@ namespace Stream.Components
                     var lineNumber = 1;
                     lines.ToList().ForEach(line =>
                     {
-                        this.TextContent.Items.Add(new TextLine()
+                        this.TextContent.Items.Add(new LineText()
                         {
-                            LineText = new LineText()
-                            {
-                                LineNumber = lineNumber++,
-                                Text = line,
-                            },
+                            LineNumber = lineNumber++,
+                            Text = this.Highlight(line),
                         });
                     });
                 }
@@ -235,9 +226,9 @@ namespace Stream.Components
         private void ApplyConfiguration(object sender, RoutedEventArgs e)
         {
             this.Configuration.Filter = this.Filter.Text;
-            //this.highlights[0].Text = this.Highlight1.Text;
-            //this.highlights[1].Text = this.Highlight2.Text;
-            //this.highlights[2].Text = this.Highlight3.Text;
+            this.highlights[0].Text = this.Highlight1.Text;
+            this.highlights[1].Text = this.Highlight2.Text;
+            this.highlights[2].Text = this.Highlight3.Text;
 
             CloseConfiguration(null, null);
             
@@ -248,6 +239,17 @@ namespace Stream.Components
         {
             Stream.Configuration.Configuration.RemoveWindowConfiguration(this.Id);
             this.owner.RemoveWindow(this);
+        }
+
+        private string Highlight(string text)
+        {
+            var result = text;
+            foreach (var highlight in this.highlights)
+            {
+                result = highlight.HighlightText(result);
+            }
+
+            return result;
         }
 
         private bool isResizing;
