@@ -139,6 +139,7 @@
     <Compile Include="Configuration\FilterTypes.cs" />
     <Compile Include="Configuration\WindowConfiguration.cs" />
     <Compile Include="Extensions\ColorExtensions.cs" />
+    <Compile Include="Files\FileCache.cs" />
     <Compile Include="Models\Highlight.cs" />
     <Compile Include="Models\LineText.cs" />
     <Compile Include="Views\MainPage.xaml.cs">

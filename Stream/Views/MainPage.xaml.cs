@@ -1,4 +1,5 @@
 ﻿using Stream.Components;
+using Stream.Files;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,6 +19,8 @@ namespace Stream.Views
     {
         public MainPage()
         {
+            this.cache = new FileCache();
+
             this.InitializeComponent();
 
             Window.Current.SizeChanged += OnSizeChanged;
@@ -107,6 +110,7 @@ namespace Stream.Views
             if (this.file != null)
             {
                 this.title.Text = $"STREAM - {this.file.Path}";
+                this.cache.AddToCache(this.file.Path);
                 ReadFile(this.file);
 
                 this.openButton.Visibility = Visibility.Collapsed;
@@ -242,6 +246,7 @@ namespace Stream.Views
 
         private StorageFile file;
         private Timer timer;
+        private FileCache cache;
 
         private readonly IList<ResizableWindow> windows;
     }
