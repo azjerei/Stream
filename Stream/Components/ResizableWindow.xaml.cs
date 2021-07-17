@@ -37,13 +37,15 @@ namespace Stream.Components
             this.OptionIgnoreCase.IsChecked = true;
         }
 
-        public void SetText(string text)
+        public void SetText(string text, bool forceRedraw = false)
         {
-            if (text.Length > this.textLength || this.forceTextRedraw)
+            if (text.Length > this.textLength || this.forceTextRedraw || forceRedraw)
             {
                 this.TextContent.Items.Clear();
                 this.textLength = text.Length;
                 this.forceTextRedraw = false;
+
+                if (string.IsNullOrEmpty(text)) return;
 
                 var lines = text.Replace("\r", string.Empty).Split('\n');
 

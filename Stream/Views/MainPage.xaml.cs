@@ -55,10 +55,16 @@ namespace Stream.Views
         {
             if (this.timer == null)
             {
-                this.timer = new Timer(1200);
+                this.timer = new Timer(1000);
                 this.timer.Elapsed += ReloadFile;
                 this.timer.Start();
             }
+        }
+
+        private void StopFileReloadTimer()
+        {
+            this.timer.Stop();
+            this.timer = null;
         }
 
         private async void ReloadFile(object sender, ElapsedEventArgs e)
@@ -111,7 +117,26 @@ namespace Stream.Views
             {
                 this.title.Text = $"STREAM - {this.file.Path}";
                 ReadFile(this.file);
+
+                this.OpenButton.Visibility = Visibility.Collapsed;
+                this.CloseButton.Visibility = Visibility.Visible;
             }
+        }
+
+        private void CloseFile(object sender, RoutedEventArgs e)
+        {
+            this.title.Text = "STREAM";
+
+            foreach (var window in this.windows)
+            {
+                window.SetText(string.Empty, true);
+            }
+
+            StopFileReloadTimer();
+
+            this.file = null;
+            this.OpenButton.Visibility = Visibility.Visible;
+            this.CloseButton.Visibility = Visibility.Collapsed;
         }
 
         private void AddWindowAsync(object sender, RoutedEventArgs e)
