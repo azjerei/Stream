@@ -31,25 +31,19 @@
             <Border Background="{ThemeResource SystemChromeMediumLowColor}">
                 <CommandBar IsOpen="True" DefaultLabelPosition="Right">
                     <!-- Open file -->
-                    <AppBarButton x:Name="OpenButton" Icon="OpenFile" Label="Open..." Click="OpenFilePickerAsync">
+                    <AppBarButton x:Name="openButton" Icon="OpenFile" Label="Open..." Click="OpenFilePickerAsync">
                         <AppBarButton.KeyboardAccelerators>
                             <KeyboardAccelerator Modifiers="Control" Key="O"/>
                         </AppBarButton.KeyboardAccelerators>
                     </AppBarButton>
-                    <!-- Close file -->
-                    <AppBarButton x:Name="CloseButton" Icon="Cancel" Label="Close" Click="CloseFile" Visibility="Collapsed">
-                        <AppBarButton.KeyboardAccelerators>
-                            <KeyboardAccelerator Modifiers="Control" Key="X"/>
-                        </AppBarButton.KeyboardAccelerators>
-                    </AppBarButton>
                     <!-- New window -->
-                    <AppBarButton Icon="NewWindow" Label="New window" Click="AddWindowAsync">
+                    <AppBarButton x:Name="newWindowButton" Icon="NewWindow" Label="New window" Click="AddWindowAsync" Visibility="Collapsed">
                         <AppBarButton.KeyboardAccelerators>
                             <KeyboardAccelerator Modifiers="Control" Key="N"/>
                         </AppBarButton.KeyboardAccelerators>
                     </AppBarButton>
                     <!-- Arrange -->
-                    <AppBarButton Icon="ViewAll" Label="Arrange">
+                    <AppBarButton x:Name="arrangeButton" Icon="ViewAll" Label="Arrange" Visibility="Collapsed">
                         <AppBarButton.KeyboardAccelerators>
                             <KeyboardAccelerator Modifiers="Control" Key="A"/>
                         </AppBarButton.KeyboardAccelerators>
@@ -82,13 +76,19 @@
                             </MenuFlyout>
                         </AppBarButton.Flyout>
                     </AppBarButton>
+                    <AppBarSeparator x:Name="closeSeparator" Visibility="Collapsed"/>
+                    <!-- Close file -->
+                    <AppBarButton x:Name="closeButton" Icon="Cancel" Label="Close" Click="CloseFile" Visibility="Collapsed">
+                        <AppBarButton.KeyboardAccelerators>
+                            <KeyboardAccelerator Modifiers="Control" Key="X"/>
+                        </AppBarButton.KeyboardAccelerators>
+                    </AppBarButton>
                 </CommandBar>
             </Border>
         </Grid>
 
         <!-- Content -->
         <Canvas x:Name="content" Grid.Row="2">
-
         </Canvas>
 
     </Grid>

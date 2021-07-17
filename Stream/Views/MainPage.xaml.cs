@@ -31,7 +31,6 @@ namespace Stream.Views
             titleBar.ButtonInactiveBackgroundColor = Colors.Transparent;
 
             this.windows = new List<ResizableWindow>();
-            CreateDefaultWindow();
         }
 
         internal void RemoveWindow(ResizableWindow window)
@@ -75,22 +74,6 @@ namespace Stream.Views
             }
         }
 
-        private void CreateDefaultWindow()
-        {
-            var window = new ResizableWindow(this)
-            {
-                Width = Window.Current.Bounds.Width - 20,
-                Height = Window.Current.Bounds.Height - 100
-            };
-            Canvas.SetLeft(window, 10);
-            Canvas.SetTop(window, 10);
-            this.windows.Add(window);
-
-            this.content.Children.Add(window);
-
-            Configuration.Configuration.AddWindowConfiguration(window);
-        }
-
         private async void ReadFile(StorageFile file)
         {
             var text = await FileIO.ReadTextAsync(file);
@@ -118,8 +101,11 @@ namespace Stream.Views
                 this.title.Text = $"STREAM - {this.file.Path}";
                 ReadFile(this.file);
 
-                this.OpenButton.Visibility = Visibility.Collapsed;
-                this.CloseButton.Visibility = Visibility.Visible;
+                this.openButton.Visibility = Visibility.Collapsed;
+                this.closeButton.Visibility = Visibility.Visible;
+                this.closeSeparator.Visibility = Visibility.Visible;
+                this.newWindowButton.Visibility = Visibility.Visible;
+                this.arrangeButton.Visibility = Visibility.Visible;
             }
         }
 
@@ -135,15 +121,24 @@ namespace Stream.Views
             StopFileReloadTimer();
 
             this.file = null;
-            this.OpenButton.Visibility = Visibility.Visible;
-            this.CloseButton.Visibility = Visibility.Collapsed;
+            this.openButton.Visibility = Visibility.Visible;
+            this.closeButton.Visibility = Visibility.Collapsed;
+            this.closeSeparator.Visibility = Visibility.Collapsed;
+            this.newWindowButton.Visibility = Visibility.Collapsed;
+            this.arrangeButton.Visibility = Visibility.Collapsed;
         }
 
         private void AddWindowAsync(object sender, RoutedEventArgs e)
         {
             var window = new ResizableWindow(this);
-            Canvas.SetLeft(window, Window.Current.Bounds.Width / 2);
-            Canvas.SetTop(window, 20);
+            var x = 10 + (this.windows.Count * 10);
+            var y = 10 + (this.windows.Count * 10);
+
+            if (x > Window.Current.Bounds.Width - 640) x -= 640;
+            if (y > Window.Current.Bounds.Height - 480) y -= 480;
+
+            Canvas.SetLeft(window,x);
+            Canvas.SetTop(window, y);
 
             this.windows.Add(window);
 

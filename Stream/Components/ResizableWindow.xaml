@@ -53,15 +53,11 @@
         </Border>
 
         <!-- Content -->
-        <!--<TextBlock x:Name="TextContent" Padding="10"/>-->
-        <ListView x:Name="TextContent" Grid.Row="1" Padding="10" SelectionChanged="LineSelected">
+        <ListView x:Name="TextContent" Grid.Row="1" Padding="10" SelectionChanged="LineSelected"
+                  Background="{ThemeResource AppBarBackgroundThemeBrush}">
             <ListView.ItemTemplate>
                 <DataTemplate x:DataType="models:LineText">
                     <local:TextLine Text="{x:Bind Text}" LineNumber="{x:Bind LineNumber}"/>
-                    <!--<StackPanel Orientation="Horizontal">
-                        <TextBlock Text="{x:Bind LineText.LineNumber}" Foreground="{ThemeResource AppBarItemForegroundThemeBrush}" Width="100"/>
-                        <TextBlock Text="{x:Bind LineText.Text}" Foreground="{ThemeResource AppBarItemForegroundThemeBrush}"/>
-                    </StackPanel>-->
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>
