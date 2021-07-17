@@ -243,6 +243,11 @@ namespace Stream.Components
             this.owner.RemoveWindow(this);
         }
 
+        private void ContainerGrid_PointerPressed(object sender, PointerRoutedEventArgs e)
+        {
+            this.owner.MoveWindowToFront(this);
+        }
+
         private string Highlight(string text)
         {
             var result = text;

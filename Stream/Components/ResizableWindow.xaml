@@ -13,14 +13,15 @@
     Height="480">
 
     <Grid x:Name="ContainerGrid"
-              Grid.Row="0"
-              Grid.Column="0"
-              Background="Transparent"
-              BorderBrush="{ThemeResource SystemBaseLowColor}"
-              BorderThickness="1"
-              ManipulationMode="TranslateX,TranslateY"
-              ManipulationStarted="ContainerGrid_ManipulationStarted"
-              ManipulationDelta="ContainerGrid_ManipulationDelta">
+          Grid.Row="0"
+          Grid.Column="0"
+          Background="Transparent"
+          BorderBrush="{ThemeResource SystemBaseLowColor}"
+          BorderThickness="1"
+          ManipulationMode="TranslateX,TranslateY"
+          ManipulationStarted="ContainerGrid_ManipulationStarted"
+          ManipulationDelta="ContainerGrid_ManipulationDelta"
+          PointerPressed="ContainerGrid_PointerPressed">
         <Grid.RowDefinitions>
             <!-- Commands -->
             <RowDefinition Height="48"/>

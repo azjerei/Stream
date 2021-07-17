@@ -1,7 +1,6 @@
 ﻿using Stream.Components;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Timers;
 using Windows.ApplicationModel.Core;
@@ -31,6 +30,15 @@ namespace Stream.Views
             titleBar.ButtonInactiveBackgroundColor = Colors.Transparent;
 
             this.windows = new List<ResizableWindow>();
+        }
+
+        internal void MoveWindowToFront(ResizableWindow window)
+        {
+            if (this.content.Children.Last() != window)
+            {
+                this.content.Children.Remove(window);
+                this.content.Children.Add(window);
+            }
         }
 
         internal void RemoveWindow(ResizableWindow window)
@@ -128,11 +136,11 @@ namespace Stream.Views
             this.arrangeButton.Visibility = Visibility.Collapsed;
         }
 
-        private void AddWindowAsync(object sender, RoutedEventArgs e)
+        private void AddWindow(object sender, RoutedEventArgs e)
         {
             var window = new ResizableWindow(this);
-            var x = 10 + (this.windows.Count * 10);
-            var y = 10 + (this.windows.Count * 10);
+            var x = 10 + (this.windows.Count * 20);
+            var y = 10 + (this.windows.Count * 20);
 
             if (x > Window.Current.Bounds.Width - 640) x -= 640;
             if (y > Window.Current.Bounds.Height - 480) y -= 480;

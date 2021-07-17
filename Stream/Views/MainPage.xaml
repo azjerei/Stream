@@ -37,7 +37,7 @@
                         </AppBarButton.KeyboardAccelerators>
                     </AppBarButton>
                     <!-- New window -->
-                    <AppBarButton x:Name="newWindowButton" Icon="NewWindow" Label="New window" Click="AddWindowAsync" Visibility="Collapsed">
+                    <AppBarButton x:Name="newWindowButton" Icon="NewWindow" Label="New window" Click="AddWindow" Visibility="Collapsed">
                         <AppBarButton.KeyboardAccelerators>
                             <KeyboardAccelerator Modifiers="Control" Key="N"/>
                         </AppBarButton.KeyboardAccelerators>
