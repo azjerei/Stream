@@ -1,11 +1,13 @@
 ﻿using Stream.Components;
 using Stream.Extensions;
 using Stream.Files;
+using Stream.WindowControl;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Timers;
 using Windows.ApplicationModel.Core;
+using Windows.Foundation;
 using Windows.Storage;
 using Windows.Storage.Pickers;
 using Windows.UI.Core;
@@ -26,9 +28,8 @@ namespace Stream.Views
         public MainPage()
         {
             this.InitializeComponent();
-            this.windows = new List<ResizableWindow>();
+            this.windowControl = new Controller(this.content);
 
-            Window.Current.SizeChanged += OnSizeChanged;
             CoreApplication.GetCurrentView().TitleBar.ExtendView();
 
             foreach (var file in FileCache.Files)
@@ -48,27 +49,11 @@ namespace Stream.Views
         }
 
         /// <summary>
-        /// Called when view is navigated to.
-        /// </summary>
-        /// <param name="e">Navigation events.</param>
-        protected override async void OnNavigatedTo(NavigationEventArgs e)
-        {
-            var token = e.Parameter.ToString();
-            if (!string.IsNullOrEmpty(token))
-            {
-                // If there was a token argument provided, the user
-                // clicked a file in the jumplist. Get the file
-                // from the cache and open it.
-                this.OnFileOpened(await FileCache.GetFromCacheAsync(token));
-            }
-        }
-
-        /// <summary>
         /// Moves a window to the front in the window list. This
         /// happens when a user clicks on a window in the UI.
         /// </summary>
         /// <param name="window"></param>
-        internal void MoveWindowToFront(ResizableWindow window)
+        public void MoveWindowToFront(ResizableWindow window)
         {
             if (this.content.Children.Last() != window)
             {
@@ -81,10 +66,9 @@ namespace Stream.Views
         /// Removes a window from the window list.
         /// </summary>
         /// <param name="window">Window to remove.</param>
-        internal void RemoveWindow(ResizableWindow window)
+        public void RemoveWindow(ResizableWindow window)
         {
-            this.windows.Remove(window);
-            this.content.Children.Remove(window);
+            this.windowControl.RemoveWindow(window);
         }
 
         /// <summary>
@@ -93,14 +77,24 @@ namespace Stream.Views
         /// </summary>
         /// <param name="caller">GUID of calling window.</param>
         /// <param name="lineNumber">Selected line number.</param>
-        internal void OnLineSelected(Guid caller, int lineNumber)
+        public void OnLineSelected(Guid caller, int lineNumber)
         {
-            foreach (var window in this.windows)
+            this.windowControl.SelectLine(caller, lineNumber);
+        }
+
+        /// <summary>
+        /// Called when view is navigated to.
+        /// </summary>
+        /// <param name="e">Navigation events.</param>
+        protected override async void OnNavigatedTo(NavigationEventArgs e)
+        {
+            var token = e.Parameter.ToString();
+            if (!string.IsNullOrEmpty(token))
             {
-                if (!window.Id.Equals(caller))
-                {
-                    window.SelectLine(lineNumber);
-                }
+                // If there was a token argument provided, the user
+                // clicked a file in the jumplist. Get the file
+                // from the cache and open it.
+                this.OnFileOpened(await FileCache.GetFromCacheAsync(token));
             }
         }
 
@@ -146,12 +140,7 @@ namespace Stream.Views
         /// <param name="file">File to read.</param>
         private async void ReadFile(StorageFile file)
         {
-            var text = await FileIO.ReadTextAsync(file);
-            foreach (var window in this.windows)
-            {
-                window.SetText(text);
-            }
-
+            this.windowControl.SetText(await FileIO.ReadTextAsync(file));
             this.StartFileReloadTimer();
         }
 
@@ -159,8 +148,8 @@ namespace Stream.Views
         /// Opens a file picker dialog.
         /// </summary>
         /// <param name="sender">Calling UI element.</param>
-        /// <param name="e">Event arguments.</param>
-        private async void OpenFilePickerAsync(object sender, RoutedEventArgs e)
+        /// <param name="args">Event arguments.</param>
+        private async void OpenFilePickerAsync(Microsoft.UI.Xaml.Controls.SplitButton sender, Microsoft.UI.Xaml.Controls.SplitButtonClickEventArgs args)
         {
             var openPicker = new FileOpenPicker
             {
@@ -213,12 +202,7 @@ namespace Stream.Views
         private void CloseFile(object sender, RoutedEventArgs e)
         {
             this.title.Text = "STREAM";
-
-            foreach (var window in this.windows)
-            {
-                window.SetText(string.Empty, true);
-            }
-
+            this.windowControl.SetText(string.Empty, true);
             this.StopFileReloadTimer();
             this.file = null;
             
@@ -237,32 +221,7 @@ namespace Stream.Views
         /// <param name="e">Event argument.</param>
         private void AddWindow(object sender, RoutedEventArgs e)
         {
-            // Based new window's position on the number of windows.
-            var window = new ResizableWindow(this);
-            var x = 10 + (this.windows.Count * 20);
-            var y = 10 + (this.windows.Count * 20);
-
-            if (x > Window.Current.Bounds.Width - 640) x -= 640;
-            if (y > Window.Current.Bounds.Height - 480) y -= 480;
-
-            Canvas.SetLeft(window,x);
-            Canvas.SetTop(window, y);
-
-            this.windows.Add(window);
-            this.content.Children.Add(window);
-        }
-
-        /// <summary>
-        /// Called when application window is resized.
-        /// </summary>
-        /// <param name="sender">Event origin.</param>
-        /// <param name="e">Event arguments.</param>
-        private void OnSizeChanged(object sender, WindowSizeChangedEventArgs e)
-        {
-            foreach (var window in this.windows)
-            {
-                window.OnSizeChanged(e.Size.Width, e.Size.Height);
-            }
+            this.windowControl.AddWindow(new ResizableWindow(this));
         }
 
         /// <summary>
@@ -272,23 +231,7 @@ namespace Stream.Views
         /// <param name="e">Event arguments.</param>
         private void ArrangeColumns(object sender, RoutedEventArgs e)
         {
-            if (!this.windows.Any()) return;
-
-            var bounds = Window.Current.Bounds;
-            bounds.Height -= 80;
-
-            var allocatedWidth = bounds.Width / this.windows.Count;
-            var x = 0.0;
-
-            foreach (var window in this.windows)
-            {
-                Canvas.SetLeft(window, x);
-                Canvas.SetTop(window, 0);
-                window.Width = allocatedWidth;
-                window.Height = bounds.Height;
-
-                x += allocatedWidth;
-            }
+            this.windowControl.Arrange(ArrangeType.Columns);
         }
 
         /// <summary>
@@ -298,23 +241,7 @@ namespace Stream.Views
         /// <param name="e">Event arguments.</param>
         private void ArrangeRows(object sender, RoutedEventArgs e)
         {
-            if (!this.windows.Any()) return;
-
-            var bounds = Window.Current.Bounds;
-            bounds.Height -= 80;
-
-            var allocatedHeight = bounds.Height / this.windows.Count;
-            var y = 0.0;
-
-            foreach (var window in this.windows)
-            {
-                Canvas.SetLeft(window, 0);
-                Canvas.SetTop(window, y);
-                window.Width = bounds.Width;
-                window.Height = allocatedHeight;
-
-                y += allocatedHeight;
-            }
+            this.windowControl.Arrange(ArrangeType.Rows);
         }
 
         /// <summary>
@@ -324,44 +251,12 @@ namespace Stream.Views
         /// <param name="e">Event arguments.</param>
         private void ArrangeGrid(object sender, RoutedEventArgs e)
         {
-            if (!this.windows.Any()) return;
-
-            var bounds = Window.Current.Bounds;
-            bounds.Height -= 80;
-
-            var numRows = (int)Math.Floor(Math.Sqrt(this.windows.Count));
-            while (this.windows.Count % numRows != 0)
-            {
-                numRows--;
-            }
-
-            var numCols = this.windows.Count / numRows;
-            var maxWidth = bounds.Width / numCols;
-            var maxHeight = bounds.Height / numRows;
-            var x = 0.0;
-            var y = 0.0;
-
-            foreach (var window in this.windows)
-            {
-                Canvas.SetLeft(window, x);
-                Canvas.SetTop(window, y);
-                window.Width = maxWidth;
-                window.Height = maxHeight;
-
-                y += maxHeight;
-
-                if (y >= bounds.Height)
-                {
-                    y = 0;
-                    x += maxWidth;
-                }
-            }
+            this.windowControl.Arrange(ArrangeType.Grid);
         }
 
         private StorageFile file;
         private Timer timer;
-
-        private readonly IList<ResizableWindow> windows;
+        private readonly Controller windowControl;
     }
 }
 

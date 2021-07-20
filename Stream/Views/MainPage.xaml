@@ -31,7 +31,7 @@
             <Border Background="{ThemeResource SystemChromeMediumLowColor}">
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
                     <!-- Open file -->
-                    <mux:SplitButton x:Name="openButton">
+                    <mux:SplitButton x:Name="openButton" Click="OpenFilePickerAsync">
                         <mux:SplitButton.KeyboardAccelerators>
                             <KeyboardAccelerator Modifiers="Control" Key="O"/>
                         </mux:SplitButton.KeyboardAccelerators>
