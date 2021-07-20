@@ -12,6 +12,7 @@ using Windows.UI.Core;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Navigation;
 
 namespace Stream.Views
 {
@@ -46,6 +47,13 @@ namespace Stream.Views
 
                 this.openButtonFlyout.Items.Add(item);
             }
+        }
+
+        protected override async void OnNavigatedTo(NavigationEventArgs e)
+        {
+            var token = e.Parameter.ToString();
+            this.file = await FileCache.GetFromCacheAsync(token);
+            this.OnFileOpened();
         }
 
         internal void MoveWindowToFront(ResizableWindow window)

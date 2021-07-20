@@ -1,6 +1,7 @@
 ﻿using Stream.Files;
 using Stream.Views;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
@@ -20,10 +21,10 @@ namespace Stream
 
         protected async override void OnLaunched(LaunchActivatedEventArgs e)
         {
-            await CreateRootFrame(!e.PrelaunchActivated);
+            await CreateRootFrame(!e.PrelaunchActivated, e.Arguments);
         }
 
-        private async Task<Frame> CreateRootFrame(bool navigate)
+        private async Task<Frame> CreateRootFrame(bool navigate, string arguments)
         {
             if (!(Window.Current.Content is Frame rootFrame))
             {
@@ -46,7 +47,7 @@ namespace Stream
             {
                 if (rootFrame.Content == null)
                 {
-                    rootFrame.Navigate(typeof(MainPage), null);
+                    rootFrame.Navigate(typeof(MainPage), arguments);
                 }
 
                 Window.Current.Activate();
