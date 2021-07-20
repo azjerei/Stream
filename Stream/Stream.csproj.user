@@ -19,6 +19,6 @@
     <UseEmulator>true</UseEmulator>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
-    <DoNotLaunchApp>true</DoNotLaunchApp>
+    <DoNotLaunchApp>false</DoNotLaunchApp>
   </PropertyGroup>
 </Project>

@@ -3,8 +3,16 @@ using Windows.UI;
 
 namespace Stream.Extensions
 {
+    /// <summary>
+    /// Color extensions.
+    /// </summary>
     public static class ColorExtensions
     {
+        /// <summary>
+        /// Resolve a <see cref="Windows.UI.Color"/> from a hex string (e.g. FF00FF).
+        /// </summary>
+        /// <param name="hex">Color hex string (e.g. FF00FF).</param>
+        /// <returns></returns>
         public static Color ToColor(this string hex)
         {
             hex = hex.Replace("#", string.Empty);

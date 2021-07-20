@@ -139,6 +139,7 @@
     <Compile Include="Configuration\FilterTypes.cs" />
     <Compile Include="Configuration\WindowConfiguration.cs" />
     <Compile Include="Extensions\ColorExtensions.cs" />
+    <Compile Include="Extensions\TitleBarExtensions.cs" />
     <Compile Include="Files\FileCache.cs" />
     <Compile Include="Files\JumpList.cs" />
     <Compile Include="Models\Highlight.cs" />

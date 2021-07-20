@@ -3,12 +3,26 @@ using Windows.UI;
 
 namespace Stream.Models
 {
+    /// <summary>
+    /// Text highlight.
+    /// </summary>
     public class Highlight
     {
+        /// <summary>
+        /// Gets or sets text to highlight.
+        /// </summary>
         public string Text { get; set; }
 
+        /// <summary>
+        /// Gets or sets color of highlighted text.
+        /// </summary>
         public Color Color { get; set; }
 
+        /// <summary>
+        /// Converts a regular text string into a highlighted text string.
+        /// </summary>
+        /// <param name="text">Text to convert.</param>
+        /// <returns>Text with highlights.</returns>
         public string HighlightText(string text)
         {
             try

@@ -1,4 +1,5 @@
 ﻿using Stream.Components;
+using Stream.Extensions;
 using Stream.Files;
 using System;
 using System.Collections.Generic;
@@ -7,31 +8,28 @@ using System.Timers;
 using Windows.ApplicationModel.Core;
 using Windows.Storage;
 using Windows.Storage.Pickers;
-using Windows.UI;
 using Windows.UI.Core;
-using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
 
 namespace Stream.Views
 {
+    /// <summary>
+    /// Main application view.
+    /// </summary>
     public sealed partial class MainPage : Page
     {
+        /// <summary>
+        /// Constructor.
+        /// </summary>
         public MainPage()
         {
             this.InitializeComponent();
+            this.windows = new List<ResizableWindow>();
 
             Window.Current.SizeChanged += OnSizeChanged;
-
-            var coreTitleBar = CoreApplication.GetCurrentView().TitleBar;
-            coreTitleBar.ExtendViewIntoTitleBar = true;
-
-            var titleBar = ApplicationView.GetForCurrentView().TitleBar;
-            titleBar.ButtonBackgroundColor = Colors.Transparent;
-            titleBar.ButtonInactiveBackgroundColor = Colors.Transparent;
-
-            this.windows = new List<ResizableWindow>();
+            CoreApplication.GetCurrentView().TitleBar.ExtendView();
 
             foreach (var file in FileCache.Files)
             {
@@ -49,13 +47,27 @@ namespace Stream.Views
             }
         }
 
+        /// <summary>
+        /// Called when view is navigated to.
+        /// </summary>
+        /// <param name="e">Navigation events.</param>
         protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
             var token = e.Parameter.ToString();
-            this.file = await FileCache.GetFromCacheAsync(token);
-            this.OnFileOpened();
+            if (!string.IsNullOrEmpty(token))
+            {
+                // If there was a token argument provided, the user
+                // clicked a file in the jumplist. Get the file
+                // from the cache and open it.
+                this.OnFileOpened(await FileCache.GetFromCacheAsync(token));
+            }
         }
 
+        /// <summary>
+        /// Moves a window to the front in the window list. This
+        /// happens when a user clicks on a window in the UI.
+        /// </summary>
+        /// <param name="window"></param>
         internal void MoveWindowToFront(ResizableWindow window)
         {
             if (this.content.Children.Last() != window)
@@ -65,12 +77,22 @@ namespace Stream.Views
             }
         }
 
+        /// <summary>
+        /// Removes a window from the window list.
+        /// </summary>
+        /// <param name="window">Window to remove.</param>
         internal void RemoveWindow(ResizableWindow window)
         {
             this.windows.Remove(window);
             this.content.Children.Remove(window);
         }
 
+        /// <summary>
+        /// Called when a text line has been selected in one of the windows.
+        /// Propagate the line number to all other windows and select it.
+        /// </summary>
+        /// <param name="caller">GUID of calling window.</param>
+        /// <param name="lineNumber">Selected line number.</param>
         internal void OnLineSelected(Guid caller, int lineNumber)
         {
             foreach (var window in this.windows)
@@ -82,6 +104,9 @@ namespace Stream.Views
             }
         }
 
+        /// <summary>
+        /// Starts file reload timer.
+        /// </summary>
         private void StartFileReloadTimer()
         {
             if (this.timer == null)
@@ -92,32 +117,49 @@ namespace Stream.Views
             }
         }
 
+        /// <summary>
+        /// Stops file reload timer.
+        /// </summary>
         private void StopFileReloadTimer()
         {
             this.timer.Stop();
             this.timer = null;
         }
 
+        /// <summary>
+        /// Reloads file. Called when file reload timer expires.
+        /// </summary>
+        /// <param name="sender">Calling timer.</param>
+        /// <param name="e">Timer events.</param>
         private async void ReloadFile(object sender, ElapsedEventArgs e)
         {
             if (this.file != null)
             {
-                await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => { ReadFile(this.file); });
+                // Read the file on the main thread.
+                await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => { this.ReadFile(this.file); });
             }
         }
 
+        /// <summary>
+        /// Read a file.
+        /// </summary>
+        /// <param name="file">File to read.</param>
         private async void ReadFile(StorageFile file)
         {
             var text = await FileIO.ReadTextAsync(file);
-
             foreach (var window in this.windows)
             {
                 window.SetText(text);
             }
 
-            StartFileReloadTimer();
+            this.StartFileReloadTimer();
         }
 
+        /// <summary>
+        /// Opens a file picker dialog.
+        /// </summary>
+        /// <param name="sender">Calling UI element.</param>
+        /// <param name="e">Event arguments.</param>
         private async void OpenFilePickerAsync(object sender, RoutedEventArgs e)
         {
             var openPicker = new FileOpenPicker
@@ -127,24 +169,34 @@ namespace Stream.Views
             };
             openPicker.FileTypeFilter.Add("*");
 
-            this.file = await openPicker.PickSingleFileAsync();
-            this.OnFileOpened();
+            this.OnFileOpened(await openPicker.PickSingleFileAsync());
         }
 
+        /// <summary>
+        /// Called when a file has been requested via the jumplist.
+        /// </summary>
+        /// <param name="token">File MRU token.</param>
         private async void OpenFileAsync(string token)
         {
-            this.file = await FileCache.GetFromCacheAsync(token);
-            this.OnFileOpened();
+            this.OnFileOpened(await FileCache.GetFromCacheAsync(token));
         }
 
-        private void OnFileOpened()
+        /// <summary>
+        /// Called when a file has been opened either via the file open dialog
+        /// or requested via the jumplist.
+        /// </summary>
+        /// <param name="file">Opened file.</param>
+        private void OnFileOpened(StorageFile file)
         {
-            if (this.file != null)
+            if (file != null)
             {
+                this.file = file;
                 this.title.Text = $"STREAM - {this.file.Path}";
-                FileCache.AddToCache(this.file);
-                ReadFile(this.file);
 
+                FileCache.AddToCache(this.file);
+                this.ReadFile(this.file);
+
+                // Change command bar actions.
                 this.openButton.Visibility = Visibility.Collapsed;
                 this.closeButton.Visibility = Visibility.Visible;
                 this.closeSeparator.Visibility = Visibility.Visible;
@@ -153,6 +205,11 @@ namespace Stream.Views
             }
         }
 
+        /// <summary>
+        /// Closes the opened file.
+        /// </summary>
+        /// <param name="sender">Event origin.</param>
+        /// <param name="e">Event arguments.</param>
         private void CloseFile(object sender, RoutedEventArgs e)
         {
             this.title.Text = "STREAM";
@@ -162,9 +219,10 @@ namespace Stream.Views
                 window.SetText(string.Empty, true);
             }
 
-            StopFileReloadTimer();
-
+            this.StopFileReloadTimer();
             this.file = null;
+            
+            // Change command bar actions.
             this.openButton.Visibility = Visibility.Visible;
             this.closeButton.Visibility = Visibility.Collapsed;
             this.closeSeparator.Visibility = Visibility.Collapsed;
@@ -172,8 +230,14 @@ namespace Stream.Views
             this.arrangeButton.Visibility = Visibility.Collapsed;
         }
 
+        /// <summary>
+        /// Adds a new window.
+        /// </summary>
+        /// <param name="sender">Event origin.</param>
+        /// <param name="e">Event argument.</param>
         private void AddWindow(object sender, RoutedEventArgs e)
         {
+            // Based new window's position on the number of windows.
             var window = new ResizableWindow(this);
             var x = 10 + (this.windows.Count * 20);
             var y = 10 + (this.windows.Count * 20);
@@ -185,10 +249,14 @@ namespace Stream.Views
             Canvas.SetTop(window, y);
 
             this.windows.Add(window);
-
             this.content.Children.Add(window);
         }
 
+        /// <summary>
+        /// Called when application window is resized.
+        /// </summary>
+        /// <param name="sender">Event origin.</param>
+        /// <param name="e">Event arguments.</param>
         private void OnSizeChanged(object sender, WindowSizeChangedEventArgs e)
         {
             foreach (var window in this.windows)
@@ -197,6 +265,11 @@ namespace Stream.Views
             }
         }
 
+        /// <summary>
+        /// Arrange windows into columns.
+        /// </summary>
+        /// <param name="sender">Event origin.</param>
+        /// <param name="e">Event arguments.</param>
         private void ArrangeColumns(object sender, RoutedEventArgs e)
         {
             if (!this.windows.Any()) return;
@@ -218,6 +291,11 @@ namespace Stream.Views
             }
         }
 
+        /// <summary>
+        /// Arrange windows into rows.
+        /// </summary>
+        /// <param name="sender">Event origin.</param>
+        /// <param name="e">Event arguments.</param>
         private void ArrangeRows(object sender, RoutedEventArgs e)
         {
             if (!this.windows.Any()) return;
@@ -239,6 +317,11 @@ namespace Stream.Views
             }
         }
 
+        /// <summary>
+        /// Arrange windows in an X by Y grid.
+        /// </summary>
+        /// <param name="sender">Event origin.</param>
+        /// <param name="e">Event arguments.</param>
         private void ArrangeGrid(object sender, RoutedEventArgs e)
         {
             if (!this.windows.Any()) return;
@@ -253,7 +336,6 @@ namespace Stream.Views
             }
 
             var numCols = this.windows.Count / numRows;
-
             var maxWidth = bounds.Width / numCols;
             var maxHeight = bounds.Height / numRows;
             var x = 0.0;

@@ -8,10 +8,20 @@ using Windows.UI.Xaml.Controls;
 
 namespace Stream.Configuration
 {
+    /// <summary>
+    /// Application configuration.
+    /// </summary>
     public static class Configuration
     {
+        /// <summary>
+        /// Gets configuration.
+        /// </summary>
         public static IDictionary<Guid, WindowConfiguration> Windows { get; set; } = new Dictionary<Guid, WindowConfiguration>();
 
+        /// <summary>
+        /// Loads configuration.
+        /// </summary>
+        /// <returns></returns>
         public async static Task<bool> LoadAsync()
         {
             try
@@ -30,6 +40,10 @@ namespace Stream.Configuration
             return false;
         }
 
+        /// <summary>
+        /// Saves configuration.
+        /// </summary>
+        /// <returns></returns>
         public async static Task<bool> SaveAsync()
         {
             try
@@ -47,6 +61,10 @@ namespace Stream.Configuration
             return false;
         }
 
+        /// <summary>
+        /// Adds a window configuration.
+        /// </summary>
+        /// <param name="window">Configuration owner.</param>
         public static void AddWindowConfiguration(ResizableWindow window)
         {
             Windows.Add(
@@ -61,6 +79,10 @@ namespace Stream.Configuration
                 });
         }
 
+        /// <summary>
+        /// Removes a window configuration.
+        /// </summary>
+        /// <param name="id"></param>
         public static void RemoveWindowConfiguration(Guid id)
         {
             Windows.Remove(id);

@@ -30,6 +30,7 @@
         <Grid Grid.Row="1">
             <Border Background="{ThemeResource SystemChromeMediumLowColor}">
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                    <!-- Open file -->
                     <mux:SplitButton x:Name="openButton">
                         <mux:SplitButton.KeyboardAccelerators>
                             <KeyboardAccelerator Modifiers="Control" Key="O"/>
@@ -39,11 +40,10 @@
                             <TextBlock Text="Open file..."/>
                         </StackPanel>
                         <mux:SplitButton.Flyout>
-                            <MenuFlyout x:Name="openButtonFlyout"/>
+                            <MenuFlyout x:Name="openButtonFlyout" Placement="Bottom"/>
                         </mux:SplitButton.Flyout>
                     </mux:SplitButton>
                     <CommandBar IsOpen="True" DefaultLabelPosition="Right">
-                        <!-- Open file -->
                         <!-- New window -->
                         <AppBarButton x:Name="newWindowButton" Icon="NewWindow" Label="New window" Click="AddWindow" Visibility="Collapsed">
                             <AppBarButton.KeyboardAccelerators>

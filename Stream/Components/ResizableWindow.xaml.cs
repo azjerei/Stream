@@ -12,12 +12,25 @@ using Windows.UI.Xaml.Input;
 
 namespace Stream.Components
 {
+    /// <summary>
+    /// Represents a resizable/movable window.
+    /// </summary>
     public sealed partial class ResizableWindow : UserControl
     {
+        /// <summary>
+        /// Gets window ID.
+        /// </summary>
         public Guid Id { get; }
 
+        /// <summary>
+        /// Gets filter configuration.
+        /// </summary>
         public FilterConfiguration Configuration { get; }
 
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        /// <param name="owner">Owning <see cref="MainPage"/> instance.</param>
         public ResizableWindow(MainPage owner)
         {
             this.InitializeComponent();
@@ -29,14 +42,17 @@ namespace Stream.Components
                 IgnoreCase = true,
                 Type = FilterType.Contains
             };
-
             this.Id = Guid.NewGuid();
-
             this.AutoscrollToggle.IsChecked = true;
             this.OptionContains.IsChecked = true;
             this.OptionIgnoreCase.IsChecked = true;
         }
 
+        /// <summary>
+        /// Sets text.
+        /// </summary>
+        /// <param name="text">Text to set.</param>
+        /// <param name="forceRedraw">If true, window will redraw itself.</param>
         public void SetText(string text, bool forceRedraw = false)
         {
             if (text.Length > this.textLength || this.forceTextRedraw || forceRedraw)
@@ -125,11 +141,21 @@ namespace Stream.Components
             }
         }
 
+        /// <summary>
+        /// Called when window should resize itself.
+        /// </summary>
+        /// <param name="width">New width.</param>
+        /// <param name="height">New height.</param>
         public void OnSizeChanged(double width, double height)
         {
-            CheckSizeConstraints(width, height);
+            this.CheckSizeConstraints(width, height);
         }
 
+        /// <summary>
+        /// Select a line at the specified line number. If the line number does not exist,
+        /// due to filtering, ignore the request.
+        /// </summary>
+        /// <param name="lineNumber">Line number to select.</param>
         public void SelectLine(int lineNumber)
         {
             var item = this.TextContent.Items.Where(i => (i as LineText).LineNumber.Equals(lineNumber));
@@ -141,15 +167,27 @@ namespace Stream.Components
             }
         }
 
+        /// <summary>
+        /// Called when container grid manipulation starts.
+        /// </summary>
+        /// <param name="sender">Event origin.</param>
+        /// <param name="e">Event arguments.</param>
         private void ContainerGrid_ManipulationStarted(object sender, ManipulationStartedRoutedEventArgs e)
         {
+            // Check if we are resizing.
             this.isResizing = e.Position.X > Width - this.ResizeRectangle.Width && 
                               e.Position.Y > Height - this.ResizeRectangle.Height;
 
+            // Check if we can move.
             this.canMove = e.Position.X > Width - this.MoveRectangle.ActualWidth && 
                            e.Position.Y < this.MoveRectangle.ActualHeight;
         }
 
+        /// <summary>
+        /// Called when container grid is being manipulated.
+        /// </summary>
+        /// <param name="sender">Event origin.</param>
+        /// <param name="e">Event arguments.</param>
         private void ContainerGrid_ManipulationDelta(object sender, ManipulationDeltaRoutedEventArgs e)
         {
             if (this.isResizing)
@@ -165,6 +203,12 @@ namespace Stream.Components
                 CheckPositionConstraints(x, y);
             }
         }
+
+        /// <summary>
+        /// Checks size constraints and limits them to the size of the application window.
+        /// </summary>
+        /// <param name="width">Window width.</param>
+        /// <param name="height">Window height.</param>
         private void CheckSizeConstraints(double width, double height)
         {
             var x = Canvas.GetLeft(this);
@@ -173,6 +217,11 @@ namespace Stream.Components
             if (y + this.Height > height - 80) this.Height = Math.Max(1, height - y - 80);
         }
 
+        /// <summary>
+        /// Checks position constraints and limits them to the application window.
+        /// </summary>
+        /// <param name="x">Window X position.</param>
+        /// <param name="y">Window Y position.</param>
         private void CheckPositionConstraints(double x, double y)
         {
             if (x < 0) x = 0;
@@ -184,6 +233,11 @@ namespace Stream.Components
             Canvas.SetTop(this, y);
         }
 
+        /// <summary>
+        /// Called when a line is selected.
+        /// </summary>
+        /// <param name="sender">Event origin.</param>
+        /// <param name="e">Event arguments.</param>
         private void LineSelected(object sender, SelectionChangedEventArgs e)
         {
             if (e.AddedItems.Any())
@@ -193,6 +247,11 @@ namespace Stream.Components
             }
         }
 
+        /// <summary>
+        /// Show configuration.
+        /// </summary>
+        /// <param name="sender">Event origin.</param>
+        /// <param name="e">Event arguments.</param>
         private void OpenConfiguration(object sender, RoutedEventArgs e)
         {
             this.TextContent.Visibility = Visibility.Collapsed;
@@ -200,12 +259,22 @@ namespace Stream.Components
             this.SlideInStoryboard.Begin();
         }
 
+        /// <summary>
+        /// Close configuration.
+        /// </summary>
+        /// <param name="sender">Event origin.</param>
+        /// <param name="e">Event arguments.</param>
         private void CloseConfiguration(object sender, RoutedEventArgs e)
         {
             this.TextContent.Visibility = Visibility.Visible;
             this.ConfigView.Visibility = Visibility.Collapsed;
         }
 
+        /// <summary>
+        /// Called when filter type is checked.
+        /// </summary>
+        /// <param name="sender">Event origin.</param>
+        /// <param name="e">Event arguments.</param>
         private void FilterTypeChecked(object sender, RoutedEventArgs e)
         {
             if (sender is RadioButton rb)
@@ -215,16 +284,31 @@ namespace Stream.Components
             }
         }
 
+        /// <summary>
+        /// Called when "ignore case" is checked.
+        /// </summary>
+        /// <param name="sender">Event origin.</param>
+        /// <param name="e">Event arguments.</param>
         private void IgnoreCaseChecked(object sender, RoutedEventArgs e)
         {
             this.Configuration.IgnoreCase = true;
         }
 
+        /// <summary>
+        /// Called when "ignore case" is unchecked.
+        /// </summary>
+        /// <param name="sender">Event origin.</param>
+        /// <param name="e">Event arguments.</param>
         private void IgnoreCaseUnchecked(object sender, RoutedEventArgs e)
         {
             this.Configuration.IgnoreCase = false;
         }
 
+        /// <summary>
+        /// Applies configuration.
+        /// </summary>
+        /// <param name="sender">Event origin.</param>
+        /// <param name="e">Event arguments.</param>
         private void ApplyConfiguration(object sender, RoutedEventArgs e)
         {
             this.Configuration.Filter = this.Filter.Text;
@@ -232,22 +316,38 @@ namespace Stream.Components
             this.highlights[1].Text = this.Highlight2.Text;
             this.highlights[2].Text = this.Highlight3.Text;
 
-            CloseConfiguration(null, null);
+            this.CloseConfiguration(null, null);
             
             this.forceTextRedraw = true;
         }
 
+        /// <summary>
+        /// Closes and removes window.
+        /// </summary>
+        /// <param name="sender">Event origin.</param>
+        /// <param name="e">Event arguments.</param>
         private void CloseWindow(object sender, RoutedEventArgs e)
         {
             Stream.Configuration.Configuration.RemoveWindowConfiguration(this.Id);
             this.owner.RemoveWindow(this);
         }
 
+        /// <summary>
+        /// Called when the mouse is pressed inside the container grid. This will move the
+        /// window to the front of the rendering stack.
+        /// </summary>
+        /// <param name="sender">Event origin.</param>
+        /// <param name="e">Event arguments.</param>
         private void ContainerGrid_PointerPressed(object sender, PointerRoutedEventArgs e)
         {
             this.owner.MoveWindowToFront(this);
         }
 
+        /// <summary>
+        /// Highlights text.
+        /// </summary>
+        /// <param name="text">Text to highlight.</param>
+        /// <returns></returns>
         private string Highlight(string text)
         {
             var result = text;
