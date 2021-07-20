@@ -1,4 +1,5 @@
-﻿using Stream.Views;
+﻿using Stream.Files;
+using Stream.Views;
 using System;
 using System.Threading.Tasks;
 using Windows.ApplicationModel;
@@ -37,10 +38,8 @@ namespace Stream
                 Window.Current.Content = rootFrame;
             }
 
-            if (!await Configuration.Configuration.LoadAsync())
-            {
-                await Configuration.Configuration.SaveAsync();
-            }
+            await FileCache.InitializeAsync();
+            await this.LoadConfigurationAsync();
 
             if (navigate)
             {
@@ -64,6 +63,14 @@ namespace Stream
         {
             var deferral = e.SuspendingOperation.GetDeferral();
             deferral.Complete();
+        }
+
+        private async Task LoadConfigurationAsync()
+        {
+            if (!await Configuration.Configuration.LoadAsync())
+            {
+                await Configuration.Configuration.SaveAsync();
+            }
         }
     }
 }

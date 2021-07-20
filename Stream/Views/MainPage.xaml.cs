@@ -19,8 +19,6 @@ namespace Stream.Views
     {
         public MainPage()
         {
-            this.cache = new FileCache();
-
             this.InitializeComponent();
 
             Window.Current.SizeChanged += OnSizeChanged;
@@ -33,6 +31,21 @@ namespace Stream.Views
             titleBar.ButtonInactiveBackgroundColor = Colors.Transparent;
 
             this.windows = new List<ResizableWindow>();
+
+            foreach (var file in FileCache.Files)
+            {
+                var item = new MenuFlyoutItem()
+                {
+                    Text = file.Key,
+                };
+
+                item.Click += (s, e) =>
+                {
+                    this.OpenFileAsync(file.Value);
+                };
+
+                this.openButtonFlyout.Items.Add(item);
+            }
         }
 
         internal void MoveWindowToFront(ResizableWindow window)
@@ -107,10 +120,21 @@ namespace Stream.Views
             openPicker.FileTypeFilter.Add("*");
 
             this.file = await openPicker.PickSingleFileAsync();
+            this.OnFileOpened();
+        }
+
+        private async void OpenFileAsync(string token)
+        {
+            this.file = await FileCache.GetFromCacheAsync(token);
+            this.OnFileOpened();
+        }
+
+        private void OnFileOpened()
+        {
             if (this.file != null)
             {
                 this.title.Text = $"STREAM - {this.file.Path}";
-                this.cache.AddToCache(this.file.Path);
+                FileCache.AddToCache(this.file);
                 ReadFile(this.file);
 
                 this.openButton.Visibility = Visibility.Collapsed;
@@ -246,7 +270,6 @@ namespace Stream.Views
 
         private StorageFile file;
         private Timer timer;
-        private FileCache cache;
 
         private readonly IList<ResizableWindow> windows;
     }

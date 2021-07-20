@@ -29,61 +29,70 @@
         <!-- Command bar -->
         <Grid Grid.Row="1">
             <Border Background="{ThemeResource SystemChromeMediumLowColor}">
-                <CommandBar IsOpen="True" DefaultLabelPosition="Right">
-                    <!-- Open file -->
-                    <AppBarButton x:Name="openButton" Icon="OpenFile" Label="Open..." Click="OpenFilePickerAsync">
-                        <AppBarButton.KeyboardAccelerators>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                    <mux:SplitButton x:Name="openButton">
+                        <mux:SplitButton.KeyboardAccelerators>
                             <KeyboardAccelerator Modifiers="Control" Key="O"/>
-                        </AppBarButton.KeyboardAccelerators>
-                    </AppBarButton>
-                    <!-- New window -->
-                    <AppBarButton x:Name="newWindowButton" Icon="NewWindow" Label="New window" Click="AddWindow" Visibility="Collapsed">
-                        <AppBarButton.KeyboardAccelerators>
-                            <KeyboardAccelerator Modifiers="Control" Key="N"/>
-                        </AppBarButton.KeyboardAccelerators>
-                    </AppBarButton>
-                    <!-- Arrange -->
-                    <AppBarButton x:Name="arrangeButton" Icon="ViewAll" Label="Arrange" Visibility="Collapsed">
-                        <AppBarButton.KeyboardAccelerators>
-                            <KeyboardAccelerator Modifiers="Control" Key="A"/>
-                        </AppBarButton.KeyboardAccelerators>
-                        <AppBarButton.Flyout>
-                            <MenuFlyout>
-                                <MenuFlyoutItem Text="Columns" Click="ArrangeColumns">
-                                    <MenuFlyoutItem.Icon>
-                                        <icons:FluentIconElement Symbol="ColumnTriple24"/>
-                                    </MenuFlyoutItem.Icon>
-                                    <MenuFlyoutItem.KeyboardAccelerators>
-                                        <KeyboardAccelerator Modifiers="Control" Key="Number1"/>
-                                    </MenuFlyoutItem.KeyboardAccelerators>
-                                </MenuFlyoutItem>
-                                <MenuFlyoutItem Text="Rows" Click="ArrangeRows">
-                                    <MenuFlyoutItem.Icon>
-                                        <icons:FluentIconElement Symbol="RowTriple24"/>
-                                    </MenuFlyoutItem.Icon>
-                                    <MenuFlyoutItem.KeyboardAccelerators>
-                                        <KeyboardAccelerator Modifiers="Control" Key="Number2"/>
-                                    </MenuFlyoutItem.KeyboardAccelerators>
-                                </MenuFlyoutItem>
-                                <MenuFlyoutItem Text="Grid" Click="ArrangeGrid">
-                                    <MenuFlyoutItem.Icon>
-                                        <icons:FluentIconElement Symbol="Grid16"/>
-                                    </MenuFlyoutItem.Icon>
-                                    <MenuFlyoutItem.KeyboardAccelerators>
-                                        <KeyboardAccelerator Modifiers="Control" Key="Number3"/>
-                                    </MenuFlyoutItem.KeyboardAccelerators>
-                                </MenuFlyoutItem>
-                            </MenuFlyout>
-                        </AppBarButton.Flyout>
-                    </AppBarButton>
-                    <AppBarSeparator x:Name="closeSeparator" Visibility="Collapsed"/>
-                    <!-- Close file -->
-                    <AppBarButton x:Name="closeButton" Icon="Cancel" Label="Close" Click="CloseFile" Visibility="Collapsed">
-                        <AppBarButton.KeyboardAccelerators>
-                            <KeyboardAccelerator Modifiers="Control" Key="X"/>
-                        </AppBarButton.KeyboardAccelerators>
-                    </AppBarButton>
-                </CommandBar>
+                        </mux:SplitButton.KeyboardAccelerators>
+                        <StackPanel Orientation="Horizontal">
+                            <SymbolIcon Symbol="OpenFile" Margin="0,0,10,0"/>
+                            <TextBlock Text="Open file..."/>
+                        </StackPanel>
+                        <mux:SplitButton.Flyout>
+                            <MenuFlyout x:Name="openButtonFlyout"/>
+                        </mux:SplitButton.Flyout>
+                    </mux:SplitButton>
+                    <CommandBar IsOpen="True" DefaultLabelPosition="Right">
+                        <!-- Open file -->
+                        <!-- New window -->
+                        <AppBarButton x:Name="newWindowButton" Icon="NewWindow" Label="New window" Click="AddWindow" Visibility="Collapsed">
+                            <AppBarButton.KeyboardAccelerators>
+                                <KeyboardAccelerator Modifiers="Control" Key="N"/>
+                            </AppBarButton.KeyboardAccelerators>
+                        </AppBarButton>
+                        <!-- Arrange -->
+                        <AppBarButton x:Name="arrangeButton" Icon="ViewAll" Label="Arrange" Visibility="Collapsed">
+                            <AppBarButton.KeyboardAccelerators>
+                                <KeyboardAccelerator Modifiers="Control" Key="A"/>
+                            </AppBarButton.KeyboardAccelerators>
+                            <AppBarButton.Flyout>
+                                <MenuFlyout>
+                                    <MenuFlyoutItem Text="Columns" Click="ArrangeColumns">
+                                        <MenuFlyoutItem.Icon>
+                                            <icons:FluentIconElement Symbol="ColumnTriple24"/>
+                                        </MenuFlyoutItem.Icon>
+                                        <MenuFlyoutItem.KeyboardAccelerators>
+                                            <KeyboardAccelerator Modifiers="Control" Key="Number1"/>
+                                        </MenuFlyoutItem.KeyboardAccelerators>
+                                    </MenuFlyoutItem>
+                                    <MenuFlyoutItem Text="Rows" Click="ArrangeRows">
+                                        <MenuFlyoutItem.Icon>
+                                            <icons:FluentIconElement Symbol="RowTriple24"/>
+                                        </MenuFlyoutItem.Icon>
+                                        <MenuFlyoutItem.KeyboardAccelerators>
+                                            <KeyboardAccelerator Modifiers="Control" Key="Number2"/>
+                                        </MenuFlyoutItem.KeyboardAccelerators>
+                                    </MenuFlyoutItem>
+                                    <MenuFlyoutItem Text="Grid" Click="ArrangeGrid">
+                                        <MenuFlyoutItem.Icon>
+                                            <icons:FluentIconElement Symbol="Grid16"/>
+                                        </MenuFlyoutItem.Icon>
+                                        <MenuFlyoutItem.KeyboardAccelerators>
+                                            <KeyboardAccelerator Modifiers="Control" Key="Number3"/>
+                                        </MenuFlyoutItem.KeyboardAccelerators>
+                                    </MenuFlyoutItem>
+                                </MenuFlyout>
+                            </AppBarButton.Flyout>
+                        </AppBarButton>
+                        <AppBarSeparator x:Name="closeSeparator" Visibility="Collapsed"/>
+                        <!-- Close file -->
+                        <AppBarButton x:Name="closeButton" Icon="Cancel" Label="Close" Click="CloseFile" Visibility="Collapsed">
+                            <AppBarButton.KeyboardAccelerators>
+                                <KeyboardAccelerator Modifiers="Control" Key="X"/>
+                            </AppBarButton.KeyboardAccelerators>
+                        </AppBarButton>
+                    </CommandBar>
+                </StackPanel>
             </Border>
         </Grid>
 

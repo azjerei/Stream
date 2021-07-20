@@ -2,61 +2,83 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using Windows.Storage;
+using Windows.Storage.AccessCache;
 
 namespace Stream.Files
 {
-    public class FileCache
+    public static class FileCache
     {
-        public IList<string> Files => this.files;
+        public static IDictionary<string, string> Files => files;
 
-        public FileCache()
+        public static async Task InitializeAsync()
         {
-            this.files = new List<string>();
-            this.ReadCacheAsync();
+            files = new Dictionary<string, string>();
+            await ReadCacheAsync();
         }
 
-        public void AddToCache(string file)
+        public static void AddToCache(IStorageItem file)
         {
-            if (!this.files.Contains(file))
+            if (!files.ContainsKey(file.Path))
             {
-                this.files.Insert(0, file);
-                this.WriteCacheAsync();
+                var mru = StorageApplicationPermissions.MostRecentlyUsedList;
+                var token = mru.Add(file);
+
+                files.Add(token, file.Path);
+                WriteCacheAsync();
             }
         }
 
-        private async void ReadCacheAsync()
+        public static async Task<StorageFile> GetFromCacheAsync(string token)
         {
-            var storageFolder = Windows.Storage.ApplicationData.Current.LocalFolder;
+            var mru = StorageApplicationPermissions.MostRecentlyUsedList;
+            return await mru.GetFileAsync(token);
+        }
 
+        private static async Task ReadCacheAsync()
+        {
             try
             {
-                var cacheFile = await storageFolder.GetFileAsync(this.cache);
-                var cache = await Windows.Storage.FileIO.ReadLinesAsync(cacheFile);
-                foreach (var file in cache)
+                var storageFolder = Windows.Storage.ApplicationData.Current.LocalFolder;
+                var cacheFile = await storageFolder.GetFileAsync(cache);
+                var cachedFiles = await Windows.Storage.FileIO.ReadLinesAsync(cacheFile);
+
+                foreach (var file in cachedFiles)
                 {
-                    this.files.Add(file);
+                    var parts = file.Split('|');
+                    files.Add(parts[1], parts[0]);
                 }
             }
             catch (FileNotFoundException)
             {
-                this.CreateCacheAsync();
+                CreateCacheAsync();
             }
         }
 
-        private async void WriteCacheAsync()
+        private static async void WriteCacheAsync()
         {
             var storageFolder = Windows.Storage.ApplicationData.Current.LocalFolder;
-            var cacheFile = await storageFolder.GetFileAsync(this.cache);
-            await Windows.Storage.FileIO.WriteLinesAsync(cacheFile, this.files.Take(10));
+            var cacheFile = await storageFolder.GetFileAsync(cache);
+            var persistFiles = files.Take(10);
+            var fileList = new List<string>();
+
+            foreach (var file in persistFiles)
+            {
+                fileList.Add($"{file.Key}|{file.Value}");
+            }
+
+            await Windows.Storage.FileIO.WriteLinesAsync(cacheFile, fileList);
         }
 
-        private async void CreateCacheAsync()
+        private static async void CreateCacheAsync()
         {
             var storageFolder = Windows.Storage.ApplicationData.Current.LocalFolder;
-            await storageFolder.CreateFileAsync(this.cache, Windows.Storage.CreationCollisionOption.ReplaceExisting);
+            await storageFolder.CreateFileAsync(cache, Windows.Storage.CreationCollisionOption.ReplaceExisting);
         }
 
-        private IList<string> files;
-        private readonly string cache = "cache.txt";
+        private static IDictionary<string, string> files;
+        private static readonly string cache = "cache.txt";
     }
 }
