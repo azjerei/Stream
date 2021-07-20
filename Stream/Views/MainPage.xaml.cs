@@ -57,11 +57,7 @@ namespace Stream.Views
         /// <param name="window"></param>
         public void MoveWindowToFront(ResizableWindow window)
         {
-            if (this.content.Children.Last() != window)
-            {
-                this.content.Children.Remove(window);
-                this.content.Children.Add(window);
-            }
+            this.controller.MoveWindowToFront(window);
         }
 
         /// <summary>
@@ -108,18 +104,10 @@ namespace Stream.Views
             if (this.file != null)
             {
                 // Read the file on the main thread.
-                await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => { this.ReadFile(this.file); });
+                await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () => {
+                    this.controller.SetText(await FileIO.ReadTextAsync(this.file));
+                });
             }
-        }
-
-        /// <summary>
-        /// Read a file.
-        /// </summary>
-        /// <param name="file">File to read.</param>
-        private async void ReadFile(StorageFile file)
-        {
-            this.controller.SetText(await FileIO.ReadTextAsync(file));
-            this.timer.Start();
         }
 
         /// <summary>
@@ -129,14 +117,7 @@ namespace Stream.Views
         /// <param name="args">Event arguments.</param>
         private async void OpenFilePickerAsync(Microsoft.UI.Xaml.Controls.SplitButton sender, Microsoft.UI.Xaml.Controls.SplitButtonClickEventArgs args)
         {
-            var openPicker = new FileOpenPicker
-            {
-                ViewMode = PickerViewMode.List,
-                SuggestedStartLocation = PickerLocationId.DocumentsLibrary
-            };
-            openPicker.FileTypeFilter.Add("*");
-
-            this.OnFileOpened(await openPicker.PickSingleFileAsync());
+            this.OnFileOpened(await FileManager.OpenFileAsync(OpenFileMode.FilePicker));
         }
 
         /// <summary>
@@ -145,7 +126,7 @@ namespace Stream.Views
         /// <param name="token">File MRU token.</param>
         private async void OpenFileAsync(string token)
         {
-            this.OnFileOpened(await FileCache.GetFromCacheAsync(token));
+            this.OnFileOpened(await FileManager.OpenFileAsync(OpenFileMode.Cache, token));
         }
 
         /// <summary>
@@ -161,14 +142,8 @@ namespace Stream.Views
                 this.title.Text = $"STREAM - {this.file.Path}";
 
                 FileCache.AddToCache(this.file);
-                this.ReadFile(this.file);
-
-                // Change command bar actions.
-                this.openButton.Visibility = Visibility.Collapsed;
-                this.closeButton.Visibility = Visibility.Visible;
-                this.closeSeparator.Visibility = Visibility.Visible;
-                this.newWindowButton.Visibility = Visibility.Visible;
-                this.arrangeButton.Visibility = Visibility.Visible;
+                this.timer.Start();
+                this.SetState(ViewState.FileOpened);
             }
         }
 
@@ -183,13 +158,7 @@ namespace Stream.Views
             this.controller.SetText(string.Empty, true);
             this.timer.Stop();
             this.file = null;
-            
-            // Change command bar actions.
-            this.openButton.Visibility = Visibility.Visible;
-            this.closeButton.Visibility = Visibility.Collapsed;
-            this.closeSeparator.Visibility = Visibility.Collapsed;
-            this.newWindowButton.Visibility = Visibility.Collapsed;
-            this.arrangeButton.Visibility = Visibility.Collapsed;
+            this.SetState(ViewState.FilePending);
         }
 
         /// <summary>
@@ -232,9 +201,29 @@ namespace Stream.Views
             this.controller.Arrange(ArrangeType.Grid);
         }
 
+        /// <summary>
+        /// Sets view state.
+        /// </summary>
+        /// <param name="state">View state.</param>
+        private void SetState(ViewState state)
+        {
+            // Change command bar actions.
+            this.openButton.Visibility = state == ViewState.FilePending ? Visibility.Visible : Visibility.Collapsed;
+            this.closeButton.Visibility = state == ViewState.FileOpened ? Visibility.Visible : Visibility.Collapsed;
+            this.closeSeparator.Visibility = state == ViewState.FileOpened ? Visibility.Visible : Visibility.Collapsed;
+            this.newWindowButton.Visibility = state == ViewState.FileOpened ? Visibility.Visible : Visibility.Collapsed;
+            this.arrangeButton.Visibility = state == ViewState.FileOpened ? Visibility.Visible : Visibility.Collapsed;
+        }
+
         private StorageFile file;
         private readonly WindowController controller;
         private readonly FileReloadTimer timer;
+
+        private enum ViewState
+        {
+            FilePending,
+            FileOpened,
+        }
     }
 }
 

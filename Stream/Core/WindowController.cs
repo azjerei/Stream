@@ -106,6 +106,20 @@ namespace Stream.Core
         }
 
         /// <summary>
+        /// Moves a window to the front in the window list. This
+        /// happens when a user clicks on a window in the UI.
+        /// </summary>
+        /// <param name="window"></param>
+        public void MoveWindowToFront(ResizableWindow window)
+        {
+            if (this.canvas.Children.Last() != window)
+            {
+                this.canvas.Children.Remove(window);
+                this.canvas.Children.Add(window);
+            }
+        }
+
+        /// <summary>
         /// Arrange windows into columns.
         /// </summary>
         private void ArrangeColumns()
