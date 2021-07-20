@@ -38,6 +38,7 @@ namespace Stream
                 Window.Current.Content = rootFrame;
             }
 
+            await JumpList.InitializeAsync();
             await FileCache.InitializeAsync();
             await this.LoadConfigurationAsync();
 

@@ -17,6 +17,11 @@ namespace Stream.Files
         {
             files = new Dictionary<string, string>();
             await ReadCacheAsync();
+
+            foreach (var file in files)
+            {
+                await JumpList.AddItemAsync(file.Key, file.Value);
+            }
         }
 
         public static void AddToCache(IStorageItem file)
@@ -28,6 +33,8 @@ namespace Stream.Files
 
                 files.Add(token, file.Path);
                 WriteCacheAsync();
+
+                JumpList.AddItemAsync(file.Path, token).Wait();
             }
         }
 
