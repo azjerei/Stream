@@ -144,12 +144,13 @@
     <Compile Include="Files\JumpList.cs" />
     <Compile Include="Models\Highlight.cs" />
     <Compile Include="Models\LineText.cs" />
+    <Compile Include="Core\FileReloadTimer.cs" />
     <Compile Include="Views\MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="WindowControl\ArrangeTypes.cs" />
-    <Compile Include="WindowControl\Controller.cs" />
+    <Compile Include="Core\ArrangeTypes.cs" />
+    <Compile Include="Core\WindowController.cs" />
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest">

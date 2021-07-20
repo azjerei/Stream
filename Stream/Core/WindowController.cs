@@ -6,18 +6,18 @@ using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
-namespace Stream.WindowControl
+namespace Stream.Core
 {
     /// <summary>
     /// Window controller.
     /// </summary>
-    public class Controller
+    public class WindowController
     {
         /// <summary>
         /// Constructor.
         /// </summary>
         /// <param name="canvasHost">Host canvas.</param>
-        public Controller(Canvas canvasHost)
+        public WindowController(Canvas canvasHost)
         {
             this.canvas = canvasHost;
             this.windows = new List<ResizableWindow>();

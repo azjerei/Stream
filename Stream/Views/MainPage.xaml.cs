@@ -1,13 +1,11 @@
 ﻿using Stream.Components;
+using Stream.Core;
 using Stream.Extensions;
 using Stream.Files;
-using Stream.WindowControl;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Timers;
 using Windows.ApplicationModel.Core;
-using Windows.Foundation;
 using Windows.Storage;
 using Windows.Storage.Pickers;
 using Windows.UI.Core;
@@ -28,7 +26,11 @@ namespace Stream.Views
         public MainPage()
         {
             this.InitializeComponent();
-            this.windowControl = new Controller(this.content);
+            this.controller = new WindowController(this.content);
+            this.timer = new FileReloadTimer(1000, () =>
+            {
+                this.ReloadFileAsync();
+            });
 
             CoreApplication.GetCurrentView().TitleBar.ExtendView();
 
@@ -68,7 +70,7 @@ namespace Stream.Views
         /// <param name="window">Window to remove.</param>
         public void RemoveWindow(ResizableWindow window)
         {
-            this.windowControl.RemoveWindow(window);
+            this.controller.RemoveWindow(window);
         }
 
         /// <summary>
@@ -79,7 +81,7 @@ namespace Stream.Views
         /// <param name="lineNumber">Selected line number.</param>
         public void OnLineSelected(Guid caller, int lineNumber)
         {
-            this.windowControl.SelectLine(caller, lineNumber);
+            this.controller.SelectLine(caller, lineNumber);
         }
 
         /// <summary>
@@ -99,33 +101,9 @@ namespace Stream.Views
         }
 
         /// <summary>
-        /// Starts file reload timer.
-        /// </summary>
-        private void StartFileReloadTimer()
-        {
-            if (this.timer == null)
-            {
-                this.timer = new Timer(1000);
-                this.timer.Elapsed += ReloadFile;
-                this.timer.Start();
-            }
-        }
-
-        /// <summary>
-        /// Stops file reload timer.
-        /// </summary>
-        private void StopFileReloadTimer()
-        {
-            this.timer.Stop();
-            this.timer = null;
-        }
-
-        /// <summary>
         /// Reloads file. Called when file reload timer expires.
         /// </summary>
-        /// <param name="sender">Calling timer.</param>
-        /// <param name="e">Timer events.</param>
-        private async void ReloadFile(object sender, ElapsedEventArgs e)
+        private async void ReloadFileAsync()
         {
             if (this.file != null)
             {
@@ -140,8 +118,8 @@ namespace Stream.Views
         /// <param name="file">File to read.</param>
         private async void ReadFile(StorageFile file)
         {
-            this.windowControl.SetText(await FileIO.ReadTextAsync(file));
-            this.StartFileReloadTimer();
+            this.controller.SetText(await FileIO.ReadTextAsync(file));
+            this.timer.Start();
         }
 
         /// <summary>
@@ -202,8 +180,8 @@ namespace Stream.Views
         private void CloseFile(object sender, RoutedEventArgs e)
         {
             this.title.Text = "STREAM";
-            this.windowControl.SetText(string.Empty, true);
-            this.StopFileReloadTimer();
+            this.controller.SetText(string.Empty, true);
+            this.timer.Stop();
             this.file = null;
             
             // Change command bar actions.
@@ -221,7 +199,7 @@ namespace Stream.Views
         /// <param name="e">Event argument.</param>
         private void AddWindow(object sender, RoutedEventArgs e)
         {
-            this.windowControl.AddWindow(new ResizableWindow(this));
+            this.controller.AddWindow(new ResizableWindow(this));
         }
 
         /// <summary>
@@ -231,7 +209,7 @@ namespace Stream.Views
         /// <param name="e">Event arguments.</param>
         private void ArrangeColumns(object sender, RoutedEventArgs e)
         {
-            this.windowControl.Arrange(ArrangeType.Columns);
+            this.controller.Arrange(ArrangeType.Columns);
         }
 
         /// <summary>
@@ -241,7 +219,7 @@ namespace Stream.Views
         /// <param name="e">Event arguments.</param>
         private void ArrangeRows(object sender, RoutedEventArgs e)
         {
-            this.windowControl.Arrange(ArrangeType.Rows);
+            this.controller.Arrange(ArrangeType.Rows);
         }
 
         /// <summary>
@@ -251,12 +229,12 @@ namespace Stream.Views
         /// <param name="e">Event arguments.</param>
         private void ArrangeGrid(object sender, RoutedEventArgs e)
         {
-            this.windowControl.Arrange(ArrangeType.Grid);
+            this.controller.Arrange(ArrangeType.Grid);
         }
 
         private StorageFile file;
-        private Timer timer;
-        private readonly Controller windowControl;
+        private readonly WindowController controller;
+        private readonly FileReloadTimer timer;
     }
 }
 

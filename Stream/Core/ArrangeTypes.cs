@@ -1,4 +1,4 @@
-﻿namespace Stream.WindowControl
+﻿namespace Stream.Core
 {
     /// <summary>
     /// Arrange type.
