@@ -1,4 +1,4 @@
-﻿using Stream.Files;
+﻿using Stream.Core;
 using Stream.Views;
 using System;
 using System.Threading.Tasks;
@@ -48,11 +48,8 @@ namespace Stream
                 Window.Current.Content = rootFrame;
             }
 
-            // Initialize jump list content.
-            await JumpList.InitializeAsync();
-
-            // Initialize file cache.
-            await FileCache.InitializeAsync();
+            // Initialize recent files and jump list.
+            await RecentFiles.InitializeAsync();
 
             // Load configuration.
             await this.LoadConfigurationAsync();

@@ -1,13 +1,10 @@
 ﻿using Stream.Components;
 using Stream.Core;
 using Stream.Extensions;
-using Stream.Files;
 using System;
-using System.Linq;
-using System.Timers;
+using System.Threading.Tasks;
 using Windows.ApplicationModel.Core;
 using Windows.Storage;
-using Windows.Storage.Pickers;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -34,20 +31,7 @@ namespace Stream.Views
 
             CoreApplication.GetCurrentView().TitleBar.ExtendView();
 
-            foreach (var file in FileCache.Files)
-            {
-                var item = new MenuFlyoutItem()
-                {
-                    Text = file.Key,
-                };
-
-                item.Click += (s, e) =>
-                {
-                    this.OpenFileAsync(file.Value);
-                };
-
-                this.openButtonFlyout.Items.Add(item);
-            }
+            this.PopulateRecentFilesAsync().Wait();
         }
 
         /// <summary>
@@ -92,7 +76,7 @@ namespace Stream.Views
                 // If there was a token argument provided, the user
                 // clicked a file in the jumplist. Get the file
                 // from the cache and open it.
-                this.OnFileOpened(await FileCache.GetFromCacheAsync(token));
+                this.OnFileOpened(await RecentFiles.GetFileAsync(token));
             }
         }
 
@@ -105,7 +89,10 @@ namespace Stream.Views
             {
                 // Read the file on the main thread.
                 await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () => {
-                    this.controller.SetText(await FileIO.ReadTextAsync(this.file));
+                    if (this.file != null)
+                    {
+                        this.controller.SetText(await FileIO.ReadTextAsync(this.file));
+                    }
                 });
             }
         }
@@ -141,7 +128,7 @@ namespace Stream.Views
                 this.file = file;
                 this.title.Text = $"STREAM - {this.file.Path}";
 
-                FileCache.AddToCache(this.file);
+                RecentFiles.AddFileAsync(this.file);
                 this.timer.Start();
                 this.SetState(ViewState.FileOpened);
             }
@@ -199,6 +186,27 @@ namespace Stream.Views
         private void ArrangeGrid(object sender, RoutedEventArgs e)
         {
             this.controller.Arrange(ArrangeType.Grid);
+        }
+
+        /// <summary>
+        /// Populates recent files (the context menu) in "open file" split button.
+        /// </summary>
+        private async Task PopulateRecentFilesAsync()
+        {
+            foreach (var file in await RecentFiles.GetFilesAsync())
+            {
+                var item = new MenuFlyoutItem()
+                {
+                    Text = file.Key,
+                };
+
+                item.Click += (s, e) =>
+                {
+                    this.OpenFileAsync(file.Value);
+                };
+
+                this.openButtonFlyout.Items.Add(item);
+            }
         }
 
         /// <summary>

@@ -1,5 +1,4 @@
-﻿using Stream.Files;
-using System;
+﻿using System;
 using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.Storage.Pickers;
@@ -59,7 +58,7 @@ namespace Stream.Core
                 throw new ArgumentNullException(token);
             }
 
-            return await FileCache.GetFromCacheAsync(token);
+            return await RecentFiles.GetFileAsync(token);
         }
     }
 }
