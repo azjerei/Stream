@@ -368,7 +368,7 @@ namespace Stream.Components
         private readonly IList<Highlight> highlights = new List<Highlight>()
         {
             new Highlight() { Text = string.Empty, Color = Colors.Salmon },
-            new Highlight() { Text = string.Empty, Color = Colors.BlueViolet },
+            new Highlight() { Text = string.Empty, Color = Colors.ForestGreen },
             new Highlight() { Text = string.Empty, Color = Colors.DeepSkyBlue }
         };
     }

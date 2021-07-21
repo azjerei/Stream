@@ -123,7 +123,7 @@
                                          Height="38"
                                          ToolTipService.ToolTip="Use commas to separate multiple words."
                                          x:Name="Highlight2"/>
-                                <Rectangle Fill="BlueViolet"
+                                <Rectangle Fill="ForestGreen"
                                            x:Name="ColorRect2"
                                            Width="40"
                                            Height="40"
