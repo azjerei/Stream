@@ -77,19 +77,19 @@
             <VariableSizedWrapGrid x:Name="ConfigGrid" Background="{ThemeResource SystemAltHighColor}" Orientation="Horizontal" MaximumRowsOrColumns="2">
                 <!-- Filtering -->
                 <StackPanel Margin="10">
-                    <TextBox x:Name="Filter" Header="Filter" MinWidth="200" MaxWidth="500" HorizontalAlignment="Left" Height="60"/>
+                    <TextBox x:Name="Filter" x:Uid="Config_Filter" MinWidth="200" MaxWidth="500" HorizontalAlignment="Left" Height="60"/>
                     <mux:RadioButtons SelectedItem="OptionContains">
-                        <RadioButton x:Name="OptionStartsWith" Tag="StartsWith" Content="Starts with" Checked="FilterTypeChecked"/>
-                        <RadioButton x:Name="OptionEndsWith" Tag="EndsWith" Content="Ends with" Checked="FilterTypeChecked"/>
-                        <RadioButton x:Name="OptionContains" Tag="Contains" Content="Contains" Checked="FilterTypeChecked"/>
-                        <RadioButton x:Name="OptionRegExp" Tag="RegExp" Content="Regular Expression" Checked="FilterTypeChecked"/>
+                        <RadioButton x:Name="OptionStartsWith" Tag="StartsWith" x:Uid="Filter_StartsWith" Checked="FilterTypeChecked"/>
+                        <RadioButton x:Name="OptionEndsWith" Tag="EndsWith" x:Uid="Filter_EndsWith" Checked="FilterTypeChecked"/>
+                        <RadioButton x:Name="OptionContains" Tag="Contains" x:Uid="Filter_Contains" Checked="FilterTypeChecked"/>
+                        <RadioButton x:Name="OptionRegExp" Tag="RegExp" x:Uid="Filter_RegEx" Checked="FilterTypeChecked"/>
                     </mux:RadioButtons>
-                    <CheckBox x:Name="OptionIgnoreCase" Margin="0,10" Content="Ignore case" Checked="IgnoreCaseChecked" 
+                    <CheckBox x:Name="OptionIgnoreCase" Margin="0,10" x:Uid="Filter_Ignorecase" Checked="IgnoreCaseChecked" 
                                   Unchecked="IgnoreCaseUnchecked"/>
                 </StackPanel>
                 <!-- Highlighting -->
                 <StackPanel Margin="10">
-                    <TextBlock Text="Highlight text"/>
+                    <TextBlock x:Uid="Config_HighlightText"/>
                         <Grid x:Name="Highlights">
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto"/>
@@ -104,7 +104,6 @@
                                          MaxHeight="400"
                                          HorizontalAlignment="Left"
                                          Height="38"
-                                         ToolTipService.ToolTip="Use commas to separate multiple words."
                                          x:Name="Highlight1"/>  
                                 <Rectangle Fill="Salmon"
                                            x:Name="ColorRect1"
@@ -121,7 +120,6 @@
                                          MaxHeight="400"
                                          HorizontalAlignment="Left"
                                          Height="38"
-                                         ToolTipService.ToolTip="Use commas to separate multiple words."
                                          x:Name="Highlight2"/>
                                 <Rectangle Fill="ForestGreen"
                                            x:Name="ColorRect2"
@@ -138,7 +136,6 @@
                                          MaxHeight="400"
                                          HorizontalAlignment="Left"
                                          Height="38"
-                                         ToolTipService.ToolTip="Use commas to separate multiple words."
                                          x:Name="Highlight3"/>
                                 <Rectangle Fill="DeepSkyBlue"
                                            x:Name="ColorRect3"
@@ -151,9 +148,9 @@
                         </Grid>
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
                         <!-- Apply button -->
-                        <Button Content="Apply" Style="{ThemeResource AccentButtonStyle}" Margin="0,30" Click="ApplyConfiguration"/>
+                        <Button x:Uid="Button_Apply" Style="{ThemeResource AccentButtonStyle}" Margin="0,30" Click="ApplyConfiguration"/>
                         <!-- Cancel button -->
-                        <Button Content="Cancel" Margin="10,0,0,0" Style="{ThemeResource ButtonRevealStyle}" Click="CloseConfiguration"/>
+                        <Button x:Uid="Button_Cancel" Margin="10,0,0,0" Style="{ThemeResource ButtonRevealStyle}" Click="CloseConfiguration"/>
                     </StackPanel>
                 </StackPanel>
             </VariableSizedWrapGrid>

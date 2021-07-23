@@ -38,7 +38,7 @@
                         </mux:SplitButton.KeyboardAccelerators>
                         <StackPanel Orientation="Horizontal">
                             <SymbolIcon Symbol="OpenFile" Margin="0,0,10,0"/>
-                            <TextBlock Text="Open file..."/>
+                            <TextBlock x:Uid="Menu_OpenFile"/>
                         </StackPanel>
                         <mux:SplitButton.Flyout>
                             <MenuFlyout x:Name="openButtonFlyout" Placement="Bottom"/>
@@ -46,19 +46,19 @@
                     </mux:SplitButton>
                     <CommandBar IsOpen="True" DefaultLabelPosition="Right">
                         <!-- New window -->
-                        <AppBarButton x:Name="newWindowButton" Icon="NewWindow" Label="New window" Click="AddWindow" Visibility="Collapsed">
+                        <AppBarButton x:Name="newWindowButton" Icon="NewWindow" x:Uid="Menu_NewWindow" Click="AddWindow" Visibility="Collapsed">
                             <AppBarButton.KeyboardAccelerators>
                                 <KeyboardAccelerator Modifiers="Control" Key="N"/>
                             </AppBarButton.KeyboardAccelerators>
                         </AppBarButton>
                         <!-- Arrange -->
-                        <AppBarButton x:Name="arrangeButton" Icon="ViewAll" Label="Arrange" Visibility="Collapsed">
+                        <AppBarButton x:Name="arrangeButton" Icon="ViewAll" x:Uid="Menu_Arrange" Visibility="Collapsed">
                             <AppBarButton.KeyboardAccelerators>
                                 <KeyboardAccelerator Modifiers="Control" Key="A"/>
                             </AppBarButton.KeyboardAccelerators>
                             <AppBarButton.Flyout>
                                 <MenuFlyout>
-                                    <MenuFlyoutItem Text="Columns" Click="ArrangeColumns">
+                                    <MenuFlyoutItem x:Uid="Arrange_Columns" Click="ArrangeColumns">
                                         <MenuFlyoutItem.Icon>
                                             <icons:FluentIconElement Symbol="ColumnTriple24"/>
                                         </MenuFlyoutItem.Icon>
@@ -66,7 +66,7 @@
                                             <KeyboardAccelerator Modifiers="Control" Key="Number1"/>
                                         </MenuFlyoutItem.KeyboardAccelerators>
                                     </MenuFlyoutItem>
-                                    <MenuFlyoutItem Text="Rows" Click="ArrangeRows">
+                                    <MenuFlyoutItem x:Uid="Arrange_Rows" Click="ArrangeRows">
                                         <MenuFlyoutItem.Icon>
                                             <icons:FluentIconElement Symbol="RowTriple24"/>
                                         </MenuFlyoutItem.Icon>
@@ -74,7 +74,7 @@
                                             <KeyboardAccelerator Modifiers="Control" Key="Number2"/>
                                         </MenuFlyoutItem.KeyboardAccelerators>
                                     </MenuFlyoutItem>
-                                    <MenuFlyoutItem Text="Grid" Click="ArrangeGrid">
+                                    <MenuFlyoutItem x:Uid="Arrange_Grid" Click="ArrangeGrid">
                                         <MenuFlyoutItem.Icon>
                                             <icons:FluentIconElement Symbol="Grid16"/>
                                         </MenuFlyoutItem.Icon>
@@ -85,13 +85,13 @@
                                 </MenuFlyout>
                             </AppBarButton.Flyout>
                         </AppBarButton>
-                        <AppBarButton x:Name="workspacesButton" Icon="DockBottom" Label="Workspaces" Visibility="Collapsed">
+                        <AppBarButton x:Name="workspacesButton" Icon="DockBottom" x:Uid="Menu_Workspaces" Visibility="Collapsed">
                             <AppBarButton.KeyboardAccelerators>
                                 <KeyboardAccelerator Modifiers="Control" Key="W"/>
                             </AppBarButton.KeyboardAccelerators>
                             <AppBarButton.Flyout>
                                 <MenuFlyout x:Name="workspacesButtonFlyout">
-                                    <MenuFlyoutItem Text="Save as workspace..." Click="SaveWorkspaceAsync">
+                                    <MenuFlyoutItem x:Uid="Menu_SaveAsWorkspace" Click="SaveWorkspaceAsync">
                                         <MenuFlyoutItem.Icon>
                                             <icons:FluentIconElement Symbol="Save24"/>
                                         </MenuFlyoutItem.Icon>
@@ -105,7 +105,7 @@
                         </AppBarButton>
                         <AppBarSeparator x:Name="closeSeparator" Visibility="Collapsed"/>
                         <!-- Close file -->
-                        <AppBarButton x:Name="closeButton" Icon="Cancel" Label="Close" Click="CloseFile" Visibility="Collapsed">
+                        <AppBarButton x:Name="closeButton" Icon="Cancel" x:Uid="Menu_Close" Click="CloseFile" Visibility="Collapsed">
                             <AppBarButton.KeyboardAccelerators>
                                 <KeyboardAccelerator Modifiers="Control" Key="X"/>
                             </AppBarButton.KeyboardAccelerators>
