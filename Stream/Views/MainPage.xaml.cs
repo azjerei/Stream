@@ -7,7 +7,9 @@ using System;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.Core;
 using Windows.Storage;
+using Windows.UI;
 using Windows.UI.Core;
+using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
@@ -81,6 +83,19 @@ namespace Stream.Views
                 // from the cache and open it.
                 this.OnFileOpened(await RecentFiles.GetFileAsync(token));
             }
+        }
+
+        /// <summary>
+        /// Called when theme changes.
+        /// </summary>
+        /// <param name="sender">Event origin.</param>
+        /// <param name="args">Event arguments.</param>
+        private void Page_ActualThemeChanged(FrameworkElement sender, object args)
+        {
+            var theme = sender.ActualTheme;
+            var titleBar = ApplicationView.GetForCurrentView().TitleBar;
+            titleBar.ButtonForegroundColor = theme == ElementTheme.Dark ? Colors.White : Colors.Black;
+
         }
 
         /// <summary>
