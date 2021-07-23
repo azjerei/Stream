@@ -51,9 +51,6 @@ namespace Stream
             // Initialize recent files and jump list.
             await RecentFiles.InitializeAsync();
 
-            // Load configuration.
-            await this.LoadConfigurationAsync();
-
             if (navigate)
             {
                 if (rootFrame.Content == null)
@@ -86,18 +83,6 @@ namespace Stream
         {
             var deferral = e.SuspendingOperation.GetDeferral();
             deferral.Complete();
-        }
-
-        /// <summary>
-        /// Loads application configuration.
-        /// </summary>
-        /// <returns></returns>
-        private async Task LoadConfigurationAsync()
-        {
-            if (!await Configuration.Configuration.LoadAsync())
-            {
-                await Configuration.Configuration.SaveAsync();
-            }
         }
     }
 }

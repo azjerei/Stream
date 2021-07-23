@@ -1,7 +1,10 @@
 ﻿using Stream.Components;
+using Stream.Configuration;
+using Stream.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -86,6 +89,25 @@ namespace Stream.Core
         }
 
         /// <summary>
+        /// Adds a new window.
+        /// </summary>
+        /// <param name="window">Window to add.</param>
+        /// <param name="config">Window configuration</param>
+        public void AddWindow(ResizableWindow window, WindowConfiguration config)
+        {
+            Canvas.SetLeft(window, config.X);
+            Canvas.SetTop(window, config.Y);
+
+            window.Width = config.Width;
+            window.Height = config.Height;
+            window.FilterConfiguration = config.Filter;
+            window.HighlightConfiguration = config.Highlight;
+
+            this.windows.Add(window);
+            this.canvas.Children.Add(window);
+        }
+
+        /// <summary>
         /// Arrange windows according to type.
         /// </summary>
         /// <param name="type">Type of window arrangement.</param>
@@ -117,6 +139,30 @@ namespace Stream.Core
                 this.canvas.Children.Remove(window);
                 this.canvas.Children.Add(window);
             }
+        }
+
+        /// <summary>
+        /// Gets window configurations.
+        /// </summary>
+        /// <returns></returns>
+        public IList<WindowConfiguration> GetWindowConfigurations()
+        {
+            var configurations = new List<WindowConfiguration>();
+
+            foreach (var window in this.windows)
+            {
+                configurations.Add(new WindowConfiguration
+                {
+                    X = Canvas.GetLeft(window),
+                    Y = Canvas.GetTop(window),
+                    Width = window.Width,
+                    Height = window.Height,
+                    Filter = window.FilterConfiguration,
+                    Highlight = window.HighlightConfiguration,
+                });
+            }
+
+            return configurations;
         }
 
         /// <summary>

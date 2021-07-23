@@ -5,7 +5,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
-using Windows.UI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
@@ -23,9 +22,14 @@ namespace Stream.Components
         public Guid Id { get; }
 
         /// <summary>
-        /// Gets filter configuration.
+        /// Gets or sets filter configuration.
         /// </summary>
-        public FilterConfiguration Configuration { get; }
+        public FilterConfiguration FilterConfiguration { get; set; }
+
+        /// <summary>
+        /// Gets or sets highlight configuration.
+        /// </summary>
+        public HighlightConfiguration HighlightConfiguration { get; set; }
 
         /// <summary>
         /// Constructor.
@@ -35,13 +39,16 @@ namespace Stream.Components
         {
             this.InitializeComponent();
 
-            this.owner = owner;
-            this.Configuration = new FilterConfiguration()
+            this.FilterConfiguration = new FilterConfiguration()
             {
                 Filter = string.Empty,
                 IgnoreCase = true,
                 Type = FilterType.Contains
             };
+
+            this.HighlightConfiguration = new HighlightConfiguration();
+
+            this.owner = owner;
             this.Id = Guid.NewGuid();
             this.AutoscrollToggle.IsChecked = true;
             this.OptionContains.IsChecked = true;
@@ -65,15 +72,15 @@ namespace Stream.Components
 
                 var lines = text.Replace("\r", string.Empty).Split('\n');
 
-                if (!string.IsNullOrEmpty(this.Configuration.Filter))
+                if (!string.IsNullOrEmpty(this.FilterConfiguration.Filter))
                 {
-                    var filter = this.Configuration.Filter;
-                    var ignoreCase = this.Configuration.IgnoreCase;
+                    var filter = this.FilterConfiguration.Filter;
+                    var ignoreCase = this.FilterConfiguration.IgnoreCase;
 
                     Regex regexp = null;
                     try
                     {
-                        regexp = this.Configuration.Type == FilterType.RegularExpression ? new Regex(filter) : null;
+                        regexp = this.FilterConfiguration.Type == FilterType.RegularExpression ? new Regex(filter) : null;
                     }
                     catch
                     {
@@ -86,7 +93,7 @@ namespace Stream.Components
                     {
                         var add = false;
 
-                        switch (this.Configuration.Type)
+                        switch (this.FilterConfiguration.Type)
                         {
                             case FilterType.StartsWith:
                                 add = line.StartsWith(filter, ignoreCase ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal);
@@ -280,7 +287,7 @@ namespace Stream.Components
             if (sender is RadioButton rb)
             {
                 var type = rb.Tag.ToString().ToFilterType();
-                this.Configuration.Type = type;
+                this.FilterConfiguration.Type = type;
             }
         }
 
@@ -291,7 +298,7 @@ namespace Stream.Components
         /// <param name="e">Event arguments.</param>
         private void IgnoreCaseChecked(object sender, RoutedEventArgs e)
         {
-            this.Configuration.IgnoreCase = true;
+            this.FilterConfiguration.IgnoreCase = true;
         }
 
         /// <summary>
@@ -301,7 +308,7 @@ namespace Stream.Components
         /// <param name="e">Event arguments.</param>
         private void IgnoreCaseUnchecked(object sender, RoutedEventArgs e)
         {
-            this.Configuration.IgnoreCase = false;
+            this.FilterConfiguration.IgnoreCase = false;
         }
 
         /// <summary>
@@ -311,10 +318,10 @@ namespace Stream.Components
         /// <param name="e">Event arguments.</param>
         private void ApplyConfiguration(object sender, RoutedEventArgs e)
         {
-            this.Configuration.Filter = this.Filter.Text;
-            this.highlights[0].Text = this.Highlight1.Text;
-            this.highlights[1].Text = this.Highlight2.Text;
-            this.highlights[2].Text = this.Highlight3.Text;
+            this.FilterConfiguration.Filter = this.Filter.Text;
+            this.HighlightConfiguration.Highlight1.Text = this.Highlight1.Text;
+            this.HighlightConfiguration.Highlight2.Text = this.Highlight2.Text;
+            this.HighlightConfiguration.Highlight3.Text = this.Highlight3.Text;
 
             this.CloseConfiguration(null, null);
             
@@ -351,11 +358,9 @@ namespace Stream.Components
         private string Highlight(string text)
         {
             var result = text;
-            foreach (var highlight in this.highlights)
-            {
-                result = highlight.HighlightText(result);
-            }
-
+            result = this.HighlightConfiguration.Highlight1.HighlightText(result);
+            result = this.HighlightConfiguration.Highlight2.HighlightText(result);
+            result = this.HighlightConfiguration.Highlight3.HighlightText(result);
             return result;
         }
 
@@ -365,11 +370,5 @@ namespace Stream.Components
         private int textLength;
 
         private readonly MainPage owner;
-        private readonly IList<Highlight> highlights = new List<Highlight>()
-        {
-            new Highlight() { Text = string.Empty, Color = Colors.Salmon },
-            new Highlight() { Text = string.Empty, Color = Colors.ForestGreen },
-            new Highlight() { Text = string.Empty, Color = Colors.DeepSkyBlue }
-        };
     }
 }

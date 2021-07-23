@@ -75,7 +75,7 @@ namespace Stream.Configuration
                     Y = Canvas.GetTop(window),
                     Width = window.Width,
                     Height = window.Height,
-                    Filter = window.Configuration
+                    Filter = window.FilterConfiguration
                 });
         }
 

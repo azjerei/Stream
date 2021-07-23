@@ -16,7 +16,7 @@
           Grid.Row="0"
           Grid.Column="0"
           Background="Transparent"
-          BorderBrush="{ThemeResource SystemBaseLowColor}"
+          BorderBrush="{ThemeResource SystemChromeBlackLowColor}"
           BorderThickness="1"
           ManipulationMode="TranslateX,TranslateY"
           ManipulationStarted="ContainerGrid_ManipulationStarted"
@@ -35,7 +35,7 @@
         </Grid.Shadow>
 
         <!-- Commands -->
-        <Border x:Name="MoveRectangle" Grid.Row="0" Background="{ThemeResource SystemControlAcrylicElementBrush}">
+        <Border x:Name="MoveRectangle" Grid.Row="0" Background="{ThemeResource SystemChromeLowColor}">
             <CommandBar Background="Transparent" IsOpen="True" DefaultLabelPosition="Collapsed">
                 <CommandBar.PrimaryCommands>
                     <AppBarToggleButton ToolTipService.Placement="Top" ToolTipService.ToolTip="Autoscroll" IsChecked="true" 
@@ -55,7 +55,7 @@
 
         <!-- Content -->
         <ListView x:Name="TextContent" Grid.Row="1" Padding="10" SelectionChanged="LineSelected"
-                  Background="{ThemeResource AppBarBackgroundThemeBrush}">
+                  Background="{ThemeResource SystemAltHighColor}">
             <ListView.ItemTemplate>
                 <DataTemplate x:DataType="models:LineText">
                     <local:TextLine Text="{x:Bind Text}" LineNumber="{x:Bind LineNumber}"/>
@@ -161,7 +161,7 @@
 
         <!-- Resizer layer -->
         <Grid Grid.Row="2" Background="{ThemeResource SystemAltHighColor}">
-            <Rectangle x:Name="ResizeRectangle" IsHitTestVisible="False" Width="16" Height="16" Fill="{ThemeResource SystemBaseLowColor}" 
+            <Rectangle x:Name="ResizeRectangle" IsHitTestVisible="False" Width="16" Height="16" Fill="{ThemeResource SystemAccentColor}" 
                            VerticalAlignment="Bottom" HorizontalAlignment="Right"/>
         </Grid>
     </Grid>

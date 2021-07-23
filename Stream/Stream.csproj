@@ -137,6 +137,7 @@
     <Compile Include="Configuration\Configuration.cs" />
     <Compile Include="Configuration\FilterConfiguration.cs" />
     <Compile Include="Configuration\FilterTypes.cs" />
+    <Compile Include="Configuration\HighlightConfiguration.cs" />
     <Compile Include="Configuration\WindowConfiguration.cs" />
     <Compile Include="Core\FileManager.cs" />
     <Compile Include="Core\OpenFileMode.cs" />
@@ -147,6 +148,7 @@
     <Compile Include="Models\Highlight.cs" />
     <Compile Include="Models\LineText.cs" />
     <Compile Include="Core\FileReloadTimer.cs" />
+    <Compile Include="Models\Workspace.cs" />
     <Compile Include="Views\MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>

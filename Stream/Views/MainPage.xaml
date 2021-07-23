@@ -21,7 +21,7 @@
         </Grid.RowDefinitions>
 
         <!-- Title bar -->
-        <Grid Grid.Row="0" x:Name="customTitleBar" Height="32" Background="{ThemeResource SystemAltHighColor}">
+        <Grid Grid.Row="0" x:Name="customTitleBar" Height="32" Background="{ThemeResource SystemChromeMediumLowColor}">
             <TextBlock Text="STREAM" x:Name="title" Style="{ThemeResource CaptionTextBlockStyle}" Margin="10,10,0,0"
                        FontFamily="Lucida Console"/>
         </Grid>
@@ -84,6 +84,24 @@
                                 </MenuFlyout>
                             </AppBarButton.Flyout>
                         </AppBarButton>
+                        <AppBarButton x:Name="workspacesButton" Icon="DockBottom" Label="Workspaces" Visibility="Collapsed">
+                            <AppBarButton.KeyboardAccelerators>
+                                <KeyboardAccelerator Modifiers="Control" Key="W"/>
+                            </AppBarButton.KeyboardAccelerators>
+                            <AppBarButton.Flyout>
+                                <MenuFlyout x:Name="workspacesButtonFlyout">
+                                    <MenuFlyoutItem Text="Save as workspace..." Click="SaveWorkspaceAsync">
+                                        <MenuFlyoutItem.Icon>
+                                            <icons:FluentIconElement Symbol="Save24"/>
+                                        </MenuFlyoutItem.Icon>
+                                        <MenuFlyoutItem.KeyboardAccelerators>
+                                            <KeyboardAccelerator Modifiers="Control" Key="Number1"/>
+                                        </MenuFlyoutItem.KeyboardAccelerators>
+                                    </MenuFlyoutItem>
+                                    <MenuFlyoutSeparator/>
+                                </MenuFlyout>
+                            </AppBarButton.Flyout>
+                        </AppBarButton>
                         <AppBarSeparator x:Name="closeSeparator" Visibility="Collapsed"/>
                         <!-- Close file -->
                         <AppBarButton x:Name="closeButton" Icon="Cancel" Label="Close" Click="CloseFile" Visibility="Collapsed">
@@ -97,7 +115,7 @@
         </Grid>
 
         <!-- Content -->
-        <Canvas x:Name="content" Grid.Row="2">
+        <Canvas x:Name="content" Grid.Row="2" Background="{ThemeResource SystemChromeMediumLowColor}">
         </Canvas>
 
     </Grid>

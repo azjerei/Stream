@@ -1,6 +1,8 @@
-﻿using Stream.Components;
+﻿using Newtonsoft.Json;
+using Stream.Components;
 using Stream.Core;
 using Stream.Extensions;
+using Stream.Models;
 using System;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.Core;
@@ -32,6 +34,7 @@ namespace Stream.Views
             CoreApplication.GetCurrentView().TitleBar.ExtendView();
 
             this.PopulateRecentFilesAsync().Wait();
+            this.PopulateWorkspaces();
         }
 
         /// <summary>
@@ -189,6 +192,47 @@ namespace Stream.Views
         }
 
         /// <summary>
+        /// Saves current window layout (with filters etc.) as a new workspace.
+        /// </summary>
+        /// <param name="sender">Event origin.</param>
+        /// <param name="e">Event arguments.</param>
+        private async void SaveWorkspaceAsync(object sender, RoutedEventArgs e)
+        {
+            var workspaceNameInput = new TextBox()
+            {
+                AcceptsReturn = false,
+                Height = 32,
+                PlaceholderText = "Workspace name...",
+            };
+
+            var dialog = new ContentDialog()
+            {
+                Title = "Save workspace",
+                PrimaryButtonText = "Save",
+                CloseButtonText = "Cancel",
+                DefaultButton = ContentDialogButton.Primary,
+                Content = workspaceNameInput,
+            };
+
+            if (await dialog.ShowAsync() == ContentDialogResult.Primary)
+            {
+                var workspaceName = workspaceNameInput.Text;
+                if (!string.IsNullOrEmpty(workspaceName) && !string.IsNullOrWhiteSpace(workspaceName))
+                {
+                    var workspace = new Workspace()
+                    {
+                        Name = workspaceName,
+                        Windows = this.controller.GetWindowConfigurations(),
+                    };
+
+                    await FileManager.SaveFileAsync($"{workspaceName}.workspace", JsonConvert.SerializeObject(workspace));
+
+                    this.PopulateWorkspaces();
+                }
+            }
+        }
+
+        /// <summary>
         /// Populates recent files (the context menu) in "open file" split button.
         /// </summary>
         private async Task PopulateRecentFilesAsync()
@@ -210,6 +254,54 @@ namespace Stream.Views
         }
 
         /// <summary>
+        /// Populates the workspaces flyout.
+        /// </summary>
+        /// <returns></returns>
+        private void PopulateWorkspaces()
+        {
+            this.workspacesButtonFlyout.Items.Clear();
+
+            foreach (var file in FileManager.GetLocalFiles(".workspace"))
+            {
+                var n = file.LastIndexOf('/');
+                if (n == -1)
+                {
+                    n = file.LastIndexOf('\\');
+                }
+
+                var fileName = file.Substring(n + 1);
+
+                var item = new MenuFlyoutItem()
+                {
+                    Text = fileName.Replace(".workspace", string.Empty),
+                };
+
+                item.Click += async (s, e) =>
+                {
+                    await this.LoadWorkspaceAsync(fileName);
+                };
+
+                this.workspacesButtonFlyout.Items.Add(item);
+            }
+        }
+
+        /// <summary>
+        /// Load a workspace.
+        /// </summary>
+        /// <param name="fileName">Workspace to load.</param>
+        /// <returns></returns>
+        private async Task LoadWorkspaceAsync(string fileName)
+        {
+            var file = await FileManager.ReadLocalFileAsync(fileName);
+            var workspace = JsonConvert.DeserializeObject<Workspace>(file);
+
+            foreach (var window in workspace.Windows)
+            {
+                this.controller.AddWindow(new ResizableWindow(this), window);
+            }
+        }
+
+        /// <summary>
         /// Sets view state.
         /// </summary>
         /// <param name="state">View state.</param>
@@ -221,6 +313,7 @@ namespace Stream.Views
             this.closeSeparator.Visibility = state == ViewState.FileOpened ? Visibility.Visible : Visibility.Collapsed;
             this.newWindowButton.Visibility = state == ViewState.FileOpened ? Visibility.Visible : Visibility.Collapsed;
             this.arrangeButton.Visibility = state == ViewState.FileOpened ? Visibility.Visible : Visibility.Collapsed;
+            this.workspacesButton.Visibility = state == ViewState.FileOpened ? Visibility.Visible : Visibility.Collapsed;
         }
 
         private StorageFile file;

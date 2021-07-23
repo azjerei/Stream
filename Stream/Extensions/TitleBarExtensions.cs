@@ -1,6 +1,7 @@
 ﻿using Windows.ApplicationModel.Core;
 using Windows.UI;
 using Windows.UI.ViewManagement;
+using Windows.UI.Xaml;
 
 namespace Stream.Extensions
 {
@@ -24,6 +25,7 @@ namespace Stream.Extensions
             var titleBar = ApplicationView.GetForCurrentView().TitleBar;
             titleBar.ButtonBackgroundColor = Colors.Transparent;
             titleBar.ButtonInactiveBackgroundColor = Colors.Transparent;
+            titleBar.ButtonForegroundColor = Application.Current.RequestedTheme == ApplicationTheme.Dark ? Colors.White : Colors.Black;
         }
     }
 }
