@@ -175,6 +175,7 @@
     <Content Include="Assets\StoreLogo.png" />
     <Content Include="Assets\Wide310x150Logo.scale-200.png" />
     <None Include="Stream_TemporaryKey.pfx" />
+    <PRIResource Include="Strings\sv-SE\Resources.resw" />
     <PRIResource Include="Strings\en-US\Resources.resw" />
   </ItemGroup>
   <ItemGroup>
