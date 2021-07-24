@@ -362,7 +362,6 @@ namespace Stream.Components
         /// <param name="e">Event arguments.</param>
         private void CloseWindow(object sender, RoutedEventArgs e)
         {
-            Configuration.Configuration.RemoveWindowConfiguration(this.Id);
             this.owner.RemoveWindow(this);
         }
 

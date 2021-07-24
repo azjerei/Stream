@@ -134,7 +134,6 @@
     <Compile Include="Components\TextLine.xaml.cs">
       <DependentUpon>TextLine.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Configuration\Configuration.cs" />
     <Compile Include="Configuration\FilterConfiguration.cs" />
     <Compile Include="Configuration\FilterTypes.cs" />
     <Compile Include="Configuration\HighlightConfiguration.cs" />
