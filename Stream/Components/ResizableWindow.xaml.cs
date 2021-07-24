@@ -401,6 +401,11 @@ namespace Stream.Components
         /// </summary>
         private string ActiveFilter => this.FilterConfiguration.GetFilterType();
 
+        /// <summary>
+        /// Gets selected filter type as index.
+        /// </summary>
+        private int SelectedFilterType => (int)this.FilterConfiguration.Type;
+
         private bool isResizing;
         private bool canMove;
         private bool forceTextRedraw;

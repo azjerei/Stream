@@ -88,8 +88,9 @@
             <VariableSizedWrapGrid x:Name="ConfigGrid" Background="{ThemeResource SystemAltHighColor}" Orientation="Horizontal" MaximumRowsOrColumns="2">
                 <!-- Filtering -->
                 <StackPanel Margin="10">
-                    <TextBox x:Name="Filter" x:Uid="Config_Filter" MinWidth="200" MaxWidth="500" HorizontalAlignment="Left" Height="60"/>
-                    <mux:RadioButtons SelectedItem="OptionContains">
+                    <TextBox x:Name="Filter" x:Uid="Config_Filter" MinWidth="200" MaxWidth="500" HorizontalAlignment="Left" 
+                             Height="60" Text="{x:Bind Path=FilterConfiguration.Filter}"/>
+                    <mux:RadioButtons SelectedIndex="{x:Bind Path=SelectedFilterType}">
                         <RadioButton x:Name="OptionStartsWith" Tag="StartsWith" x:Uid="Filter_StartsWith" Checked="FilterTypeChecked"/>
                         <RadioButton x:Name="OptionEndsWith" Tag="EndsWith" x:Uid="Filter_EndsWith" Checked="FilterTypeChecked"/>
                         <RadioButton x:Name="OptionContains" Tag="Contains" x:Uid="Filter_Contains" Checked="FilterTypeChecked"/>
@@ -115,6 +116,7 @@
                                          MaxHeight="400"
                                          HorizontalAlignment="Left"
                                          Height="38"
+                                         Text="{x:Bind Path=HighlightConfiguration.Highlight1.Text}"
                                          x:Name="Highlight1"/>  
                                 <Rectangle Fill="Salmon"
                                            x:Name="ColorRect1"
@@ -131,6 +133,7 @@
                                          MaxHeight="400"
                                          HorizontalAlignment="Left"
                                          Height="38"
+                                         Text="{x:Bind Path=HighlightConfiguration.Highlight2.Text}"
                                          x:Name="Highlight2"/>
                                 <Rectangle Fill="ForestGreen"
                                            x:Name="ColorRect2"
@@ -147,6 +150,7 @@
                                          MaxHeight="400"
                                          HorizontalAlignment="Left"
                                          Height="38"
+                                         Text="{x:Bind Path=HighlightConfiguration.Highlight3.Text}"
                                          x:Name="Highlight3"/>
                                 <Rectangle Fill="DeepSkyBlue"
                                            x:Name="ColorRect3"
