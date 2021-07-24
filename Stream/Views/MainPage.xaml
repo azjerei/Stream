@@ -44,7 +44,7 @@
                             <MenuFlyout x:Name="openButtonFlyout" Placement="Bottom"/>
                         </mux:SplitButton.Flyout>
                     </mux:SplitButton>
-                    <CommandBar IsOpen="True" DefaultLabelPosition="Right">
+                    <CommandBar DefaultLabelPosition="Right">
                         <!-- New window -->
                         <AppBarButton x:Name="newWindowButton" Icon="NewWindow" x:Uid="Menu_NewWindow" Click="AddWindow" Visibility="Collapsed">
                             <AppBarButton.KeyboardAccelerators>

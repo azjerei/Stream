@@ -46,7 +46,7 @@
                 <icons:FluentIconElement Symbol="Filter20" Grid.Column="0" Margin="4,16,0,0" Visibility="{x:Bind Path=HasFilter}"/>
                 <TextBlock Text="{x:Bind Path=ActiveFilter}" Style="{ThemeResource CaptionTextBlockStyle}" Margin="8,16,0,0" Grid.Column="1" />
                 <TextBlock x:Name="Title" Text="{x:Bind Path=FilterConfiguration.Filter}" Style="{ThemeResource CaptionTextBlockStyle}" Margin="5,16,0,0" Grid.Column="2"/>
-                <CommandBar Background="Transparent" IsOpen="True" DefaultLabelPosition="Collapsed" Grid.Column="3">
+                <CommandBar Background="Transparent" DefaultLabelPosition="Collapsed" Grid.Column="3">
                     <CommandBar.PrimaryCommands>
                         <AppBarToggleButton ToolTipService.Placement="Top" ToolTipService.ToolTip="Autoscroll" IsChecked="true" 
                                                 x:Name="AutoscrollToggle" Width="48">
