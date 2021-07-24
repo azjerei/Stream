@@ -6,5 +6,6 @@
 using System.Diagnostics.CodeAnalysis;
 
 [assembly: SuppressMessage("Style", "IDE0060:Remove unused parameter", Justification = "<Pending>")]
-[assembly: SuppressMessage("Style", "IDE0060:Remove unused parameter", Justification = "<Pending>")] 
-[assembly: SuppressMessage("Style", "IDE0060:Remove unused parameter", Justification = "<Pending>")]
+[assembly: SuppressMessage("Style", "IDE0003:Simplify name", Justification = "<Pending>")]
+[assembly: SuppressMessage("Style", "IDE0008:Explicit types", Justification = "<Pending>")]
+[assembly: SuppressMessage("Style", "IDE0051:Unused methods", Justification = "<Pending>")]

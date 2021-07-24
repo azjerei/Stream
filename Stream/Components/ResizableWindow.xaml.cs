@@ -68,7 +68,10 @@ namespace Stream.Components
                 this.textLength = text.Length;
                 this.forceTextRedraw = false;
 
-                if (string.IsNullOrEmpty(text)) return;
+                if (string.IsNullOrEmpty(text))
+                {
+                    return;
+                }
 
                 var lines = text.Replace("\r", string.Empty).Split('\n');
 
@@ -182,11 +185,11 @@ namespace Stream.Components
         private void ContainerGrid_ManipulationStarted(object sender, ManipulationStartedRoutedEventArgs e)
         {
             // Check if we are resizing.
-            this.isResizing = e.Position.X > Width - this.ResizeRectangle.Width && 
+            this.isResizing = e.Position.X > Width - this.ResizeRectangle.Width &&
                               e.Position.Y > Height - this.ResizeRectangle.Height;
 
             // Check if we can move.
-            this.canMove = e.Position.X > Width - this.MoveRectangle.ActualWidth && 
+            this.canMove = e.Position.X > Width - this.MoveRectangle.ActualWidth &&
                            e.Position.Y < this.MoveRectangle.ActualHeight;
         }
 
@@ -220,8 +223,15 @@ namespace Stream.Components
         {
             var x = Canvas.GetLeft(this);
             var y = Canvas.GetTop(this);
-            if (x + this.Width > width) this.Width = Math.Max(1, width - x);
-            if (y + this.Height > height - 80) this.Height = Math.Max(1, height - y - 80);
+            if (x + this.Width > width)
+            {
+                this.Width = Math.Max(1, width - x);
+            }
+
+            if (y + this.Height > height - 80)
+            {
+                this.Height = Math.Max(1, height - y - 80);
+            }
         }
 
         /// <summary>
@@ -231,10 +241,25 @@ namespace Stream.Components
         /// <param name="y">Window Y position.</param>
         private void CheckPositionConstraints(double x, double y)
         {
-            if (x < 0) x = 0;
-            if (x + this.Width > Window.Current.Bounds.Width) x = Window.Current.Bounds.Width - this.Width;
-            if (y < 0) y = 0;
-            if (y + this.Height > Window.Current.Bounds.Height - 80) y = Window.Current.Bounds.Height - this.Height - 80;
+            if (x < 0)
+            {
+                x = 0;
+            }
+
+            if (x + this.Width > Window.Current.Bounds.Width)
+            {
+                x = Window.Current.Bounds.Width - this.Width;
+            }
+
+            if (y < 0)
+            {
+                y = 0;
+            }
+
+            if (y + this.Height > Window.Current.Bounds.Height - 80)
+            {
+                y = Window.Current.Bounds.Height - this.Height - 80;
+            }
 
             Canvas.SetLeft(this, x);
             Canvas.SetTop(this, y);
@@ -323,8 +348,10 @@ namespace Stream.Components
             this.HighlightConfiguration.Highlight2.Text = this.Highlight2.Text;
             this.HighlightConfiguration.Highlight3.Text = this.Highlight3.Text;
 
+            this.Title.Text = this.Filter.Text;
+
             this.CloseConfiguration(null, null);
-            
+
             this.forceTextRedraw = true;
         }
 
@@ -335,7 +362,7 @@ namespace Stream.Components
         /// <param name="e">Event arguments.</param>
         private void CloseWindow(object sender, RoutedEventArgs e)
         {
-            Stream.Configuration.Configuration.RemoveWindowConfiguration(this.Id);
+            Configuration.Configuration.RemoveWindowConfiguration(this.Id);
             this.owner.RemoveWindow(this);
         }
 
@@ -363,6 +390,16 @@ namespace Stream.Components
             result = this.HighlightConfiguration.Highlight3.HighlightText(result);
             return result;
         }
+
+        /// <summary>
+        /// Checks if the window has a configured filter.
+        /// </summary>
+        private bool HasFilter => !string.IsNullOrEmpty(this.FilterConfiguration.Filter);
+
+        /// <summary>
+        /// Gets name of active filter.
+        /// </summary>
+        private string ActiveFilter => this.FilterConfiguration.GetFilterType();
 
         private bool isResizing;
         private bool canMove;

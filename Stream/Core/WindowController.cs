@@ -78,8 +78,15 @@ namespace Stream.Core
             var x = 10 + (this.windows.Count * 20);
             var y = 10 + (this.windows.Count * 20);
 
-            if (x > Window.Current.Bounds.Width - 640) x -= 640;
-            if (y > Window.Current.Bounds.Height - 480) y -= 480;
+            if (x > Window.Current.Bounds.Width - 640)
+            {
+                x -= 640;
+            }
+
+            if (y > Window.Current.Bounds.Height - 480)
+            {
+                y -= 480;
+            }
 
             Canvas.SetLeft(window, x);
             Canvas.SetTop(window, y);
@@ -170,7 +177,10 @@ namespace Stream.Core
         /// </summary>
         private void ArrangeColumns()
         {
-            if (!this.windows.Any()) return;
+            if (!this.windows.Any())
+            {
+                return;
+            }
 
             var bounds = Window.Current.Bounds;
             bounds.Height -= 80;
@@ -194,7 +204,10 @@ namespace Stream.Core
         /// </summary>
         private void ArrangeRows()
         {
-            if (!this.windows.Any()) return;
+            if (!this.windows.Any())
+            {
+                return;
+            }
 
             var bounds = Window.Current.Bounds;
             bounds.Height -= 80;
@@ -218,7 +231,10 @@ namespace Stream.Core
         /// </summary>
         private void ArrangeGrid()
         {
-            if (!this.windows.Any()) return;
+            if (!this.windows.Any())
+            {
+                return;
+            }
 
             var bounds = Window.Current.Bounds;
             bounds.Height -= 80;

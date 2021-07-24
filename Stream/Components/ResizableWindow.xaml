@@ -36,21 +36,32 @@
 
         <!-- Commands -->
         <Border x:Name="MoveRectangle" Grid.Row="0" Background="{ThemeResource SystemChromeLowColor}">
-            <CommandBar Background="Transparent" IsOpen="True" DefaultLabelPosition="Collapsed">
-                <CommandBar.PrimaryCommands>
-                    <AppBarToggleButton ToolTipService.Placement="Top" ToolTipService.ToolTip="Autoscroll" IsChecked="true" 
-                                            x:Name="AutoscrollToggle" Width="48">
-                        <AppBarToggleButton.Icon>
-                            <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE74B;"/>
-                        </AppBarToggleButton.Icon>
-                    </AppBarToggleButton>
-                    <AppBarButton Icon="Setting" ToolTipService.Placement="Top" ToolTipService.ToolTip="Configure..."  
-                                      x:Name="ConfigToggle" Click="OpenConfiguration" Width="48"/>
-                    <AppBarSeparator/>
-                    <AppBarButton Icon="Cancel" ToolTipService.Placement="Top" ToolTipService.ToolTip="Close window" 
-                                      Click="CloseWindow" Width="48"/>
-                </CommandBar.PrimaryCommands>
-            </CommandBar>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <icons:FluentIconElement Symbol="Filter20" Grid.Column="0" Margin="4,16,0,0" Visibility="{x:Bind Path=HasFilter}"/>
+                <TextBlock Text="{x:Bind Path=ActiveFilter}" Style="{ThemeResource CaptionTextBlockStyle}" Margin="8,16,0,0" Grid.Column="1" />
+                <TextBlock x:Name="Title" Text="{x:Bind Path=FilterConfiguration.Filter}" Style="{ThemeResource CaptionTextBlockStyle}" Margin="5,16,0,0" Grid.Column="2"/>
+                <CommandBar Background="Transparent" IsOpen="True" DefaultLabelPosition="Collapsed" Grid.Column="3">
+                    <CommandBar.PrimaryCommands>
+                        <AppBarToggleButton ToolTipService.Placement="Top" ToolTipService.ToolTip="Autoscroll" IsChecked="true" 
+                                                x:Name="AutoscrollToggle" Width="48">
+                            <AppBarToggleButton.Icon>
+                                <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE74B;"/>
+                            </AppBarToggleButton.Icon>
+                        </AppBarToggleButton>
+                        <AppBarButton Icon="Setting" ToolTipService.Placement="Top" ToolTipService.ToolTip="Configure..."  
+                                          x:Name="ConfigToggle" Click="OpenConfiguration" Width="48"/>
+                        <AppBarSeparator/>
+                        <AppBarButton Icon="Cancel" ToolTipService.Placement="Top" ToolTipService.ToolTip="Close window" 
+                                          Click="CloseWindow" Width="48"/>
+                    </CommandBar.PrimaryCommands>
+                </CommandBar>
+            </Grid>
         </Border>
 
         <!-- Content -->
