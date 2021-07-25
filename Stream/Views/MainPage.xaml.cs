@@ -215,7 +215,8 @@ namespace Stream.Views
         /// <param name="e">Event arguments.</param>
         private void ShowSettings(object sender, RoutedEventArgs e)
         {
-
+            this.settings.Visibility = this.settings.Visibility == Visibility.Visible ? Visibility.Collapsed : Visibility.Visible;
+            this.SlideInStoryboard.Begin();
         }
 
         /// <summary>

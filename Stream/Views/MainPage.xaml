@@ -123,7 +123,15 @@
         </Canvas>
         
         <!-- Settings -->
-        <Grid x:Name="settings" Grid.Row="2" Padding="20">
+        <Grid x:Name="settings" Grid.Row="2" Padding="20" Visibility="Collapsed">
+            <!-- Slide & fade animation -->
+            <Grid.Resources>
+                <Storyboard x:Name="SlideInStoryboard">
+                    <RepositionThemeAnimation TargetName="settings" FromVerticalOffset="-200"/>
+                    <DoubleAnimation Storyboard.TargetName="settings" Storyboard.TargetProperty="Opacity"
+                                     To="1" From="0" Duration="0:0:0.5"/>
+                </Storyboard>
+            </Grid.Resources>
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="100"/>
