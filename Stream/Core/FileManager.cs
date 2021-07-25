@@ -69,6 +69,21 @@ namespace Stream.Core
         }
 
         /// <summary>
+        /// Deletes a local file.
+        /// </summary>
+        /// <param name="fileName">Name of file.</param>
+        /// <returns></returns>
+        public static async Task DeleteLocalFileAsync(string fileName)
+        {
+            var storage = ApplicationData.Current.LocalFolder;
+            var file = await storage.GetFileAsync(fileName);
+            if (file != null)
+            {
+                await file.DeleteAsync();
+            }
+        }
+
+        /// <summary>
         /// Shows a file picker dialog that allows the user to select a file to open.
         /// </summary>
         /// <returns></returns>

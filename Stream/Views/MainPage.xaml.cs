@@ -9,6 +9,7 @@ using Windows.ApplicationModel.Core;
 using Windows.Storage;
 using Windows.UI;
 using Windows.UI.Core;
+using Windows.UI.Popups;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -106,7 +107,8 @@ namespace Stream.Views
             if (this.file != null)
             {
                 // Read the file on the main thread.
-                await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () => {
+                await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
+                {
                     if (this.file != null)
                     {
                         this.controller.SetText(await FileIO.ReadTextAsync(this.file));
@@ -207,6 +209,26 @@ namespace Stream.Views
         }
 
         /// <summary>
+        /// Shows settings.
+        /// </summary>
+        /// <param name="sender">Event origin.</param>
+        /// <param name="e">Event arguments.</param>
+        private void ShowSettings(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        /// <summary>
+        /// Called when theme is changed.
+        /// </summary>
+        /// <param name="sender">Event origin.</param>
+        /// <param name="e">Event arguments.</param>
+        private void ThemeChecked(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        /// <summary>
         /// Saves current window layout (with filters etc.) as a new workspace.
         /// </summary>
         /// <param name="sender">Event origin.</param>
@@ -275,6 +297,7 @@ namespace Stream.Views
         private void PopulateWorkspaces()
         {
             this.workspacesButtonFlyout.Items.Clear();
+            this.workspaces.Items.Clear();
 
             foreach (var file in FileManager.GetLocalFiles(".workspace"))
             {
@@ -286,17 +309,21 @@ namespace Stream.Views
 
                 var fileName = file.Substring(n + 1);
 
-                var item = new MenuFlyoutItem()
+                // Populate workspace flyout.
+                var flyoutItem = new MenuFlyoutItem()
                 {
                     Text = fileName.Replace(".workspace", string.Empty),
                 };
 
-                item.Click += async (s, e) =>
+                flyoutItem.Click += async (s, e) =>
                 {
                     await this.LoadWorkspaceAsync(fileName);
                 };
 
-                this.workspacesButtonFlyout.Items.Add(item);
+                this.workspacesButtonFlyout.Items.Add(flyoutItem);
+
+                // Populate settings list.
+                this.workspaces.Items.Add(new { Name = fileName });
             }
         }
 
@@ -314,6 +341,31 @@ namespace Stream.Views
             {
                 this.controller.AddWindow(new ResizableWindow(this), window);
             }
+        }
+
+        /// <summary>
+        /// Called when user deletes a workspace.
+        /// </summary>
+        /// <param name="sender">Event origin.</param>
+        /// <param name="e">Event arguments.</param>
+        private async void RemoveWorkspaceAsync(object sender, RoutedEventArgs e)
+        {
+            var dialog = new MessageDialog(LanguageManager.GetString("Dialog_RemoveWorkspace_Prompt"))
+            {
+                Title = LanguageManager.GetString("Dialog_RemoveWorkspace_Header"),
+            };
+
+            dialog.Commands.Add(new UICommand() { Label = LanguageManager.GetString("Yes"), Id = 0 });
+            dialog.Commands.Add(new UICommand() { Label = LanguageManager.GetString("No"), Id = 1 });
+
+            var result = await dialog.ShowAsync();
+            if ((int)result.Id == 0)
+            {
+                var fileName = (sender as Button).Tag.ToString();
+                await FileManager.DeleteLocalFileAsync(fileName);
+            }
+
+            this.PopulateWorkspaces();
         }
 
         /// <summary>

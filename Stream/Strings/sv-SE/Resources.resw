@@ -132,11 +132,20 @@
   <data name="Button_Cancel.Content" xml:space="preserve">
     <value>Avbryt</value>
   </data>
+  <data name="Button_Remove.Content" xml:space="preserve">
+    <value>Ta bort</value>
+  </data>
   <data name="Config_Filter.Header" xml:space="preserve">
     <value>Filter</value>
   </data>
   <data name="Config_HighlightText.Text" xml:space="preserve">
     <value>Markera text</value>
+  </data>
+  <data name="Dialog_RemoveWorkspace_Header" xml:space="preserve">
+    <value>Ta bort arbetsyta?</value>
+  </data>
+  <data name="Dialog_RemoveWorkspace_Prompt" xml:space="preserve">
+    <value>Vill du ta bort denna arbetsyta? Du kan inte ångra dig senare.</value>
   </data>
   <data name="Filter_Contains.Content" xml:space="preserve">
     <value>Innehåller</value>
@@ -171,7 +180,31 @@
   <data name="Menu_SaveWorkspace.Text" xml:space="preserve">
     <value>Spara arbetsyta...</value>
   </data>
+  <data name="Menu_Settings.Text" xml:space="preserve">
+    <value>Inställningar</value>
+  </data>
   <data name="Menu_Workspaces.Label" xml:space="preserve">
     <value>Arbetsytor</value>
+  </data>
+  <data name="No" xml:space="preserve">
+    <value>Nej</value>
+  </data>
+  <data name="Settings_Theme.Text" xml:space="preserve">
+    <value>Tema</value>
+  </data>
+  <data name="Settings_ThemeDark.Text" xml:space="preserve">
+    <value>Mörkt</value>
+  </data>
+  <data name="Settings_ThemeLight.Text" xml:space="preserve">
+    <value>Ljust</value>
+  </data>
+  <data name="Settings_ThemeSystem.Text" xml:space="preserve">
+    <value>System</value>
+  </data>
+  <data name="Settings_Workspaces.Text" xml:space="preserve">
+    <value>Arbetsytor</value>
+  </data>
+  <data name="Yes" xml:space="preserve">
+    <value>Ja</value>
   </data>
 </root>
