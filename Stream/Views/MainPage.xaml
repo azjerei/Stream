@@ -5,10 +5,11 @@
     xmlns:local="using:Stream.Components"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:mux="using:Microsoft.UI.Xaml.Controls" xmlns:icons="using:Fluent.Icons" xmlns:models="using:Stream.Models"
+    xmlns:mux="using:Microsoft.UI.Xaml.Controls" 
+    xmlns:icons="using:Fluent.Icons" 
+    xmlns:models="using:Stream.Models"
     mc:Ignorable="d"
     Background="{ThemeResource SystemBaseLowColor}"
-    RequestedTheme="Default"
     ActualThemeChanged="Page_ActualThemeChanged">
 
     <Grid Background="{ThemeResource SystemAltHighColor}">
@@ -91,7 +92,7 @@
                                 <KeyboardAccelerator Modifiers="Control" Key="W"/>
                             </AppBarButton.KeyboardAccelerators>
                             <AppBarButton.Flyout>
-                                <MenuFlyout x:Name="workspacesButtonFlyout">
+                                <MenuFlyout x:Name="workspacesButtonFlyout" Placement="Bottom">
                                     <MenuFlyoutItem x:Uid="Menu_SaveAsWorkspace" Click="SaveWorkspaceAsync">
                                         <MenuFlyoutItem.Icon>
                                             <icons:FluentIconElement Symbol="Save24"/>
@@ -123,13 +124,11 @@
         </Canvas>
         
         <!-- Settings -->
-        <Grid x:Name="settings" Grid.Row="2" Padding="20" Visibility="Collapsed">
+        <Grid x:Name="settings" Grid.Row="2" Padding="20" Visibility="Collapsed" Background="{ThemeResource SystemChromeMediumLowColor}">
             <!-- Slide & fade animation -->
             <Grid.Resources>
                 <Storyboard x:Name="SlideInStoryboard">
                     <RepositionThemeAnimation TargetName="settings" FromVerticalOffset="-200"/>
-                    <DoubleAnimation Storyboard.TargetName="settings" Storyboard.TargetProperty="Opacity"
-                                     To="1" From="0" Duration="0:0:0.5"/>
                 </Storyboard>
             </Grid.Resources>
             <Grid.RowDefinitions>
@@ -148,16 +147,17 @@
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
-                    <icons:FluentIconElement Symbol="PaintBrush24" VerticalAlignment="Center" Margin="10,0,20,0" Grid.Column="0"/>
+                    <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE771;" VerticalAlignment="Center" Margin="10,0,20,0" Grid.Column="0"/>
                     <TextBlock x:Uid="Settings_Theme" Style="{ThemeResource SubtitleTextBlockStyle}" 
                                VerticalAlignment="Center" HorizontalAlignment="Left"
                                Grid.Column="1"/>
-                    <mux:DropDownButton VerticalAlignment="Center" MinWidth="120" Grid.Column="2" Margin="0,0,10,0">
+                    <mux:DropDownButton VerticalAlignment="Center" MinWidth="120" Grid.Column="2" Margin="0,0,10,0"
+                                        Content="{x:Bind Path=configuration.Theme}">
                         <mux:DropDownButton.Flyout>
                             <MenuFlyout Placement="Bottom">
-                                <MenuFlyoutItem x:Uid="Settings_ThemeDark"/>
-                                <MenuFlyoutItem x:Uid="Settings_ThemeLight"/>
-                                <MenuFlyoutItem x:Uid="Settings_ThemeSystem"/>
+                                <MenuFlyoutItem x:Uid="Settings_ThemeDark" Tag="Dark" Click="ThemeChecked"/>
+                                <MenuFlyoutItem x:Uid="Settings_ThemeLight" Tag="Light" Click="ThemeChecked"/>
+                                <MenuFlyoutItem x:Uid="Settings_ThemeSystem" Tag="System" Click="ThemeChecked"/>
                             </MenuFlyout>
                         </mux:DropDownButton.Flyout>
                     </mux:DropDownButton>

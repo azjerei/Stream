@@ -27,6 +27,8 @@ namespace Stream.Core
                     return await OpenFileFromPickerAsync();
                 case OpenFileMode.Cache:
                     return await OpenFileFromCacheAsync(token);
+                default:
+                    break;
             }
 
             return null;
@@ -41,8 +43,23 @@ namespace Stream.Core
         public static async Task SaveFileAsync(string name, string content)
         {
             var storage = ApplicationData.Current.LocalFolder;
-            var file = await storage.CreateFileAsync(name);
-            await FileIO.WriteTextAsync(file, content);
+
+            try
+            {
+                var exists = await storage.GetFileAsync(name);
+                if (exists != null)
+                {
+                    await exists.DeleteAsync();
+                }
+            }
+            catch
+            {
+            }
+            finally
+            {
+                var file = await storage.CreateFileAsync(name);
+                await FileIO.WriteTextAsync(file, content);
+            }
         }
 
         /// <summary>
@@ -61,11 +78,20 @@ namespace Stream.Core
         /// Reads a local file.
         /// </summary>
         /// <param name="fileName">Name of file.</param>
-        /// <returns>File content.</returns>
+        /// <returns>File content, or null if file was not found.</returns>
         public static async Task<string> ReadLocalFileAsync(string fileName)
         {
-            var storage = ApplicationData.Current.LocalFolder;
-            return await FileIO.ReadTextAsync(await storage.GetFileAsync(fileName));
+            try
+            {
+                var storage = ApplicationData.Current.LocalFolder;
+                var file = await storage.GetFileAsync(fileName);
+                return file != null ? await FileIO.ReadTextAsync(file) : null;
+            }
+            catch
+            {
+            }
+
+            return null;
         }
 
         /// <summary>

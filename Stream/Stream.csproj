@@ -134,15 +134,18 @@
     <Compile Include="Components\TextLine.xaml.cs">
       <DependentUpon>TextLine.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Configuration\Configuration.cs" />
     <Compile Include="Configuration\FilterConfiguration.cs" />
     <Compile Include="Configuration\FilterTypes.cs" />
     <Compile Include="Configuration\HighlightConfiguration.cs" />
+    <Compile Include="Configuration\ThemeTypes.cs" />
     <Compile Include="Configuration\WindowConfiguration.cs" />
     <Compile Include="Core\FileManager.cs" />
     <Compile Include="Core\LanguageManager.cs" />
     <Compile Include="Core\OpenFileMode.cs" />
     <Compile Include="Core\RecentFiles.cs" />
     <Compile Include="Extensions\ColorExtensions.cs" />
+    <Compile Include="Extensions\ThemeExtensions.cs" />
     <Compile Include="Extensions\TitleBarExtensions.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Models\Highlight.cs" />

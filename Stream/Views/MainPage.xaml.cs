@@ -36,6 +36,7 @@ namespace Stream.Views
 
             CoreApplication.GetCurrentView().TitleBar.ExtendView();
 
+            this.LoadConfiguration();
             this.PopulateRecentFilesAsync().Wait();
             this.PopulateWorkspaces();
         }
@@ -226,7 +227,22 @@ namespace Stream.Views
         /// <param name="e">Event arguments.</param>
         private void ThemeChecked(object sender, RoutedEventArgs e)
         {
+            var theme = (sender as MenuFlyoutItem).Tag.ToString();
+            this.configuration.Theme = theme.ToTheme();
+            this.configuration.Save();
+            this.ApplyTheme();
+        }
 
+        /// <summary>
+        /// Applies a new application theme. Called when the user changes the theme in settings.
+        /// </summary>
+        private void ApplyTheme()
+        {
+            var theme = this.configuration.Theme.ToElementTheme();
+            if (Window.Current.Content is FrameworkElement element)
+            {
+                element.RequestedTheme = theme;
+            }
         }
 
         /// <summary>
@@ -271,6 +287,15 @@ namespace Stream.Views
         }
 
         /// <summary>
+        /// Loads configuration.
+        /// </summary>
+        private async void LoadConfiguration()
+        {
+            this.configuration = await Configuration.Configuration.LoadAsync();
+            this.ApplyTheme();
+        }
+
+        /// <summary>
         /// Populates recent files (the context menu) in "open file" split button.
         /// </summary>
         private async Task PopulateRecentFilesAsync()
@@ -297,7 +322,10 @@ namespace Stream.Views
         /// <returns></returns>
         private void PopulateWorkspaces()
         {
+            var saveAsItem = this.workspacesButtonFlyout.Items[0];
             this.workspacesButtonFlyout.Items.Clear();
+            this.workspacesButtonFlyout.Items.Add(saveAsItem);
+
             this.workspaces.Items.Clear();
 
             foreach (var file in FileManager.GetLocalFiles(".workspace"))
@@ -324,7 +352,7 @@ namespace Stream.Views
                 this.workspacesButtonFlyout.Items.Add(flyoutItem);
 
                 // Populate settings list.
-                this.workspaces.Items.Add(new { Name = fileName });
+                this.workspaces.Items.Add(new { Name = fileName.Substring(0, fileName.LastIndexOf('.')) });
             }
         }
 
@@ -363,7 +391,7 @@ namespace Stream.Views
             if ((int)result.Id == 0)
             {
                 var fileName = (sender as Button).Tag.ToString();
-                await FileManager.DeleteLocalFileAsync(fileName);
+                await FileManager.DeleteLocalFileAsync($"{fileName}.workspace");
             }
 
             this.PopulateWorkspaces();
@@ -385,6 +413,7 @@ namespace Stream.Views
         }
 
         private StorageFile file;
+        private Configuration.Configuration configuration;
         private readonly WindowController controller;
         private readonly FileReloadTimer timer;
 
