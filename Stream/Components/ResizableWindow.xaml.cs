@@ -118,9 +118,9 @@ namespace Stream.Components
 
                         if (add)
                         {
-                            this.TextContent.Items.Add(new LineText()
+                            this.TextContent.Items.Add(new Row()
                             {
-                                LineNumber = n,
+                                RowNumber = n,
                                 Text = this.Highlight(line),
                             });
                         }
@@ -133,9 +133,9 @@ namespace Stream.Components
                     var lineNumber = 1;
                     lines.ToList().ForEach(line =>
                     {
-                        this.TextContent.Items.Add(new LineText()
+                        this.TextContent.Items.Add(new Row()
                         {
-                            LineNumber = lineNumber++,
+                            RowNumber = lineNumber++,
                             Text = this.Highlight(line),
                         });
                     });
@@ -168,7 +168,7 @@ namespace Stream.Components
         /// <param name="lineNumber">Line number to select.</param>
         public void SelectLine(int lineNumber)
         {
-            var item = this.TextContent.Items.Where(i => (i as LineText).LineNumber.Equals(lineNumber));
+            var item = this.TextContent.Items.Where(i => (i as Row).RowNumber.Equals(lineNumber));
             if (item.Any())
             {
                 this.AutoscrollToggle.IsChecked = false;
@@ -274,7 +274,7 @@ namespace Stream.Components
         {
             if (e.AddedItems.Any())
             {
-                var lineNumber = (e.AddedItems.First() as LineText).LineNumber;
+                var lineNumber = (e.AddedItems.First() as Row).RowNumber;
                 this.owner.OnLineSelected(this.Id, lineNumber);
             }
         }

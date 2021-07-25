@@ -68,8 +68,8 @@
         <ListView x:Name="TextContent" Grid.Row="1" Padding="10" SelectionChanged="LineSelected"
                   Background="{ThemeResource SystemAltHighColor}">
             <ListView.ItemTemplate>
-                <DataTemplate x:DataType="models:LineText">
-                    <local:TextLine Text="{x:Bind Text}" LineNumber="{x:Bind LineNumber}"/>
+                <DataTemplate x:DataType="models:Row">
+                    <local:TextRow Text="{x:Bind Text}" RowNumber="{x:Bind RowNumber}"/>
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>

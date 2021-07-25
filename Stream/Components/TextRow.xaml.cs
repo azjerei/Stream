@@ -8,9 +8,9 @@ using Windows.UI.Xaml.Media;
 namespace Stream.Components
 {
     /// <summary>
-    /// Represents a line of text.
+    /// Represents a row of text.
     /// </summary>
-    public sealed partial class TextLine : UserControl
+    public sealed partial class TextRow : UserControl
     {
         /// <summary>
         /// Text dependency property.
@@ -18,7 +18,7 @@ namespace Stream.Components
         public static readonly DependencyProperty TextProperty = DependencyProperty.Register(
             "Text",
             typeof(string),
-            typeof(TextLine),
+            typeof(TextRow),
             new PropertyMetadata(null));
 
         /// <summary>
@@ -26,32 +26,32 @@ namespace Stream.Components
         /// </summary>
         public string Text
         {
-            get { return (string)GetValue(TextProperty); }
+            get => (string)GetValue(TextProperty);
             set { SetValue(TextProperty, value); this.HighlightText(value); }
         }
 
         /// <summary>
         /// Line number dependency property.
         /// </summary>
-        public static readonly DependencyProperty LineNumberProperty = DependencyProperty.Register(
+        public static readonly DependencyProperty RowNumberProperty = DependencyProperty.Register(
             "LineNumber",
             typeof(int),
-            typeof(TextLine),
+            typeof(TextRow),
             new PropertyMetadata(null));
 
         /// <summary>
-        /// Gets or sets line number.
+        /// Gets or sets row number.
         /// </summary>
-        public int LineNumber
+        public int RowNumber
         {
-            get { return (int)GetValue(LineNumberProperty); }
-            set { SetValue(LineNumberProperty, value); }
+            get => (int)GetValue(RowNumberProperty);
+            set => SetValue(RowNumberProperty, value);
         }
 
         /// <summary>
         /// Constructor.
         /// </summary>
-        public TextLine()
+        public TextRow()
         {
             this.InitializeComponent();
         }

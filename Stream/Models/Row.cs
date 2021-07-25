@@ -1,14 +1,14 @@
 ﻿namespace Stream.Models
 {
     /// <summary>
-    /// A line of text.
+    /// A row of text.
     /// </summary>
-    public class LineText
+    public class Row
     {
         /// <summary>
-        /// Gets or sets line number.
+        /// Gets or sets row number.
         /// </summary>
-        public int LineNumber { get; set; }
+        public int RowNumber { get; set; }
 
         /// <summary>
         /// Gets or sets text.
@@ -18,17 +18,17 @@
         /// <inheritdoc/>
         public override bool Equals(object obj)
         {
-            var other = obj as LineText;
+            var other = obj as Row;
 
             return 
-                this.LineNumber == other.LineNumber &&
+                this.RowNumber == other.RowNumber &&
                 this.Text.Equals(other.Text);
         }
 
         /// <inheritdoc/>
         public override int GetHashCode()
         {
-            return this.LineNumber.GetHashCode() + this.Text.GetHashCode();
+            return this.RowNumber.GetHashCode() + this.Text.GetHashCode();
         }
     }
 }

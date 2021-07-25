@@ -131,8 +131,8 @@
     <Compile Include="Components\ResizableWindow.xaml.cs">
       <DependentUpon>ResizableWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Components\TextLine.xaml.cs">
-      <DependentUpon>TextLine.xaml</DependentUpon>
+    <Compile Include="Components\TextRow.xaml.cs">
+      <DependentUpon>TextRow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Configuration\Configuration.cs" />
     <Compile Include="Configuration\FilterConfiguration.cs" />
@@ -149,7 +149,7 @@
     <Compile Include="Extensions\TitleBarExtensions.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Models\Highlight.cs" />
-    <Compile Include="Models\LineText.cs" />
+    <Compile Include="Models\Row.cs" />
     <Compile Include="Core\FileReloadTimer.cs" />
     <Compile Include="Models\Workspace.cs" />
     <Compile Include="Views\MainPage.xaml.cs">
@@ -190,7 +190,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Components\TextLine.xaml">
+    <Page Include="Components\TextRow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
