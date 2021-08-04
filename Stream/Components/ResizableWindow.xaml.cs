@@ -1,4 +1,5 @@
 ﻿using Stream.Configuration;
+using Stream.Core;
 using Stream.Models;
 using Stream.Views;
 using System;
@@ -152,6 +153,21 @@ namespace Stream.Components
         }
 
         /// <summary>
+        /// Gets text of selected row.
+        /// </summary>
+        /// <returns>Selected row's text or null.</returns>
+        public string GetText()
+        {
+            if (this.TextContent.SelectedItem != null)
+            {
+                var text = (this.TextContent.SelectedItem as Row).Text;
+                return text;
+            }
+
+            return null;
+        }
+
+        /// <summary>
         /// Called when window should resize itself.
         /// </summary>
         /// <param name="width">New width.</param>
@@ -162,13 +178,13 @@ namespace Stream.Components
         }
 
         /// <summary>
-        /// Select a line at the specified line number. If the line number does not exist,
+        /// Select a row at the specified row number. If the line number does not exist,
         /// due to filtering, ignore the request.
         /// </summary>
-        /// <param name="lineNumber">Line number to select.</param>
-        public void SelectLine(int lineNumber)
+        /// <param name="rowNumber">Row number to select.</param>
+        public void SelectRow(int rowNumber)
         {
-            var item = this.TextContent.Items.Where(i => (i as Row).RowNumber.Equals(lineNumber));
+            var item = this.TextContent.Items.Where(i => (i as Row).RowNumber.Equals(rowNumber));
             if (item.Any())
             {
                 this.AutoscrollToggle.IsChecked = false;
@@ -181,6 +197,8 @@ namespace Stream.Components
                 // if there is no new item to select to avoid confusion.
                 this.TextContent.SelectedItem = null;
             }
+
+            this.CopyText.IsEnabled = this.TextContent.SelectedItem != null;
         }
 
         /// <summary>
@@ -282,6 +300,8 @@ namespace Stream.Components
             {
                 var lineNumber = (e.AddedItems.First() as Row).RowNumber;
                 this.owner.OnLineSelected(this.Id, lineNumber);
+                this.CopyText.IsEnabled = true;
+                this.AutoscrollToggle.IsChecked = false;
             }
         }
 
@@ -372,6 +392,20 @@ namespace Stream.Components
         }
 
         /// <summary>
+        /// Copies selected row's text.
+        /// </summary>
+        /// <param name="sender">Event origin.</param>
+        /// <param name="e">Event arguments.</param>
+        private void CopyText_Click(object sender, RoutedEventArgs e)
+        {
+            if (this.TextContent.SelectedItem != null)
+            {
+                var text = (this.TextContent.SelectedItem as Row).Text;
+                ClipboardManager.CopyText(text);
+            }
+        }
+
+        /// <summary>
         /// Called when the mouse is pressed inside the container grid. This will move the
         /// window to the front of the rendering stack.
         /// </summary>
@@ -380,6 +414,20 @@ namespace Stream.Components
         private void ContainerGrid_PointerPressed(object sender, PointerRoutedEventArgs e)
         {
             this.owner.MoveWindowToFront(this);
+        }
+
+        /// <summary>
+        /// Called when autoscroll is toggled.
+        /// </summary>
+        /// <param name="sender">Event origin.</param>
+        /// <param name="e">Event args.</param>
+        private void AutoscrollToggle_Checked(object sender, RoutedEventArgs e)
+        {
+            var button = (sender as AppBarToggleButton);
+            if (button.IsChecked == true && this.TextContent != null)
+            {
+                this.TextContent.SelectedItem = null;
+            }
         }
 
         /// <summary>

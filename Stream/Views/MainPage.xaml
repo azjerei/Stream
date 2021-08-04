@@ -12,8 +12,12 @@
     mc:Ignorable="d"
     Background="{ThemeResource SystemBaseLowColor}"
     ActualThemeChanged="Page_ActualThemeChanged">
-
+    
     <Grid Background="{ThemeResource SystemAltHighColor}">
+        <Grid.KeyboardAccelerators>
+            <KeyboardAccelerator Modifiers="Control" Key="C" Invoked="CopyText"/>
+        </Grid.KeyboardAccelerators>
+        
         <Grid.RowDefinitions>
             <!-- Title bar -->
             <RowDefinition Height="Auto"/>

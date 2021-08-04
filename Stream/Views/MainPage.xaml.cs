@@ -14,6 +14,7 @@ using Windows.UI.Popups;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Navigation;
 
 namespace Stream.Views
@@ -68,7 +69,7 @@ namespace Stream.Views
         /// <param name="lineNumber">Selected line number.</param>
         public void OnLineSelected(Guid caller, int lineNumber)
         {
-            this.controller.SelectLine(caller, lineNumber);
+            this.controller.SelectRow(caller, lineNumber);
         }
 
         /// <summary>
@@ -334,6 +335,20 @@ namespace Stream.Views
             foreach (var window in workspace.Windows)
             {
                 this.controller.AddWindow(new ResizableWindow(this), window);
+            }
+        }
+
+        /// <summary>
+        /// Copies text.
+        /// </summary>
+        /// <param name="sender">Event origin.</param>
+        /// <param name="args">Event args.</param>
+        private void CopyText(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
+        {
+            var text = this.controller.GetText();
+            if (text != null)
+            {
+                ClipboardManager.CopyText(text);
             }
         }
 

@@ -1,10 +1,8 @@
 ﻿using Stream.Components;
 using Stream.Configuration;
-using Stream.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -39,18 +37,18 @@ namespace Stream.Core
         }
 
         /// <summary>
-        /// Called when a text line has been selected in one of the windows.
+        /// Called when a text row has been selected in one of the windows.
         /// Propagate the line number to all other windows and select it.
         /// </summary>
         /// <param name="caller">GUID of calling window.</param>
-        /// <param name="lineNumber">Selected line number.</param>
-        public void SelectLine(Guid caller, int lineNumber)
+        /// <param name="rowNumber">Selected row number.</param>
+        public void SelectRow(Guid caller, int rowNumber)
         {
             foreach (var window in this.windows)
             {
                 if (!window.Id.Equals(caller))
                 {
-                    window.SelectLine(lineNumber);
+                    window.SelectRow(rowNumber);
                 }
             }
         }
@@ -66,6 +64,24 @@ namespace Stream.Core
             {
                 window.SetText(text, forceRedraw);
             }
+        }
+
+        /// <summary>
+        /// Gets text at selected row.
+        /// </summary>
+        /// <returns>Select row text or null if no text is selected.</returns>
+        public string GetText()
+        {
+            foreach (var window in this.windows)
+            {
+                var text = window.GetText();
+                if (text != null)
+                {
+                    return text;
+                }
+            }
+
+            return null;
         }
 
         /// <summary>

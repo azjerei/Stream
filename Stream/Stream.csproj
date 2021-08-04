@@ -140,6 +140,7 @@
     <Compile Include="Configuration\HighlightConfiguration.cs" />
     <Compile Include="Configuration\ThemeTypes.cs" />
     <Compile Include="Configuration\WindowConfiguration.cs" />
+    <Compile Include="Core\ClipboardManager.cs" />
     <Compile Include="Core\FileManager.cs" />
     <Compile Include="Core\LanguageManager.cs" />
     <Compile Include="Core\OpenFileMode.cs" />

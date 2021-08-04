@@ -34,7 +34,7 @@
             <ThemeShadow />
         </Grid.Shadow>
 
-        <!-- Commands -->
+        <!-- Window header/Move zone -->
         <Border x:Name="MoveRectangle" Grid.Row="0" Background="{ThemeResource SystemChromeLowColor}">
             <Grid>
                 <Grid.ColumnDefinitions>
@@ -43,22 +43,27 @@
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
+                <!-- Filter label -->
                 <icons:FluentIconElement Symbol="Filter20" Grid.Column="0" Margin="4,16,0,0" Visibility="{x:Bind Path=HasFilter}"/>
                 <TextBlock Text="{x:Bind Path=ActiveFilter}" Style="{ThemeResource CaptionTextBlockStyle}" Margin="8,16,0,0" Grid.Column="1" />
                 <TextBlock x:Name="Title" Text="{x:Bind Path=FilterConfiguration.Filter}" Style="{ThemeResource CaptionTextBlockStyle}" Margin="5,16,0,0" Grid.Column="2"/>
+                <!-- Commands -->
                 <CommandBar Background="Transparent" DefaultLabelPosition="Collapsed" Grid.Column="3">
                     <CommandBar.PrimaryCommands>
-                        <AppBarToggleButton ToolTipService.Placement="Top" ToolTipService.ToolTip="Autoscroll" IsChecked="true" 
-                                                x:Name="AutoscrollToggle" Width="48">
+                        <!-- Copy text -->
+                        <AppBarButton x:Name="CopyText" Width="48" Icon="Copy" Click="CopyText_Click" IsEnabled="False"/>
+                        <AppBarSeparator/>
+                        <!-- Autoscroll -->
+                        <AppBarToggleButton x:Name="AutoscrollToggle" Width="48" IsChecked="true" Checked="AutoscrollToggle_Checked">
                             <AppBarToggleButton.Icon>
                                 <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE74B;"/>
                             </AppBarToggleButton.Icon>
                         </AppBarToggleButton>
-                        <AppBarButton Icon="Setting" ToolTipService.Placement="Top" ToolTipService.ToolTip="Configure..."  
-                                          x:Name="ConfigToggle" Click="OpenConfiguration" Width="48"/>
+                        <!-- Configuration -->
+                        <AppBarButton x:Name="ConfigToggle" Click="OpenConfiguration" Width="48" Icon="Setting" />
                         <AppBarSeparator/>
-                        <AppBarButton Icon="Cancel" ToolTipService.Placement="Top" ToolTipService.ToolTip="Close window" 
-                                          Click="CloseWindow" Width="48"/>
+                        <!-- Close window -->
+                        <AppBarButton Icon="Cancel" Click="CloseWindow" Width="48" />
                     </CommandBar.PrimaryCommands>
                 </CommandBar>
             </Grid>
