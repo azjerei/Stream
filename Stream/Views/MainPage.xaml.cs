@@ -4,6 +4,7 @@ using Stream.Core;
 using Stream.Extensions;
 using Stream.Models;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.Core;
 using Windows.Storage;
@@ -36,7 +37,6 @@ namespace Stream.Views
 
             CoreApplication.GetCurrentView().TitleBar.ExtendView();
 
-            this.LoadConfiguration();
             this.PopulateRecentFilesAsync().Wait();
             this.PopulateWorkspaces();
         }
@@ -216,34 +216,8 @@ namespace Stream.Views
         /// <param name="e">Event arguments.</param>
         private void ShowSettings(object sender, RoutedEventArgs e)
         {
-            this.settings.Visibility = this.settings.Visibility == Visibility.Visible ? Visibility.Collapsed : Visibility.Visible;
-            this.SlideInStoryboard.Begin();
-        }
-
-        /// <summary>
-        /// Called when theme is changed.
-        /// </summary>
-        /// <param name="sender">Event origin.</param>
-        /// <param name="e">Event arguments.</param>
-        private void ThemeChecked(object sender, RoutedEventArgs e)
-        {
-            var theme = (sender as MenuFlyoutItem).Tag.ToString();
-            this.configuration.Theme = theme.ToTheme();
-            this.configuration.Save();
-            this.ApplyTheme();
-        }
-
-        /// <summary>
-        /// Applies a new application theme. Called when the user changes the theme in settings.
-        /// </summary>
-        private void ApplyTheme()
-        {
-            var theme = this.configuration.Theme.ToElementTheme();
-            if (Window.Current.Content is FrameworkElement element)
-            {
-                element.RequestedTheme = theme;
-            }
-        }
+            this.settings.Toggle();
+        }    
 
         /// <summary>
         /// Saves current window layout (with filters etc.) as a new workspace.
@@ -287,15 +261,6 @@ namespace Stream.Views
         }
 
         /// <summary>
-        /// Loads configuration.
-        /// </summary>
-        private async void LoadConfiguration()
-        {
-            this.configuration = await Configuration.Configuration.LoadAsync();
-            this.ApplyTheme();
-        }
-
-        /// <summary>
         /// Populates recent files (the context menu) in "open file" split button.
         /// </summary>
         private async Task PopulateRecentFilesAsync()
@@ -326,9 +291,9 @@ namespace Stream.Views
             this.workspacesButtonFlyout.Items.Clear();
             this.workspacesButtonFlyout.Items.Add(saveAsItem);
 
-            this.workspaces.Items.Clear();
+            var files = FileManager.GetLocalFiles(".workspace");
 
-            foreach (var file in FileManager.GetLocalFiles(".workspace"))
+            foreach (var file in files)
             {
                 var n = file.LastIndexOf('/');
                 if (n == -1)
@@ -350,10 +315,10 @@ namespace Stream.Views
                 };
 
                 this.workspacesButtonFlyout.Items.Add(flyoutItem);
-
-                // Populate settings list.
-                this.workspaces.Items.Add(new { Name = fileName.Substring(0, fileName.LastIndexOf('.')) });
             }
+
+            // Populate settings list.
+            this.settings.Workspaces = files.ToList();
         }
 
         /// <summary>
@@ -373,31 +338,6 @@ namespace Stream.Views
         }
 
         /// <summary>
-        /// Called when user deletes a workspace.
-        /// </summary>
-        /// <param name="sender">Event origin.</param>
-        /// <param name="e">Event arguments.</param>
-        private async void RemoveWorkspaceAsync(object sender, RoutedEventArgs e)
-        {
-            var dialog = new MessageDialog(LanguageManager.GetString("Dialog_RemoveWorkspace_Prompt"))
-            {
-                Title = LanguageManager.GetString("Dialog_RemoveWorkspace_Header"),
-            };
-
-            dialog.Commands.Add(new UICommand() { Label = LanguageManager.GetString("Yes"), Id = 0 });
-            dialog.Commands.Add(new UICommand() { Label = LanguageManager.GetString("No"), Id = 1 });
-
-            var result = await dialog.ShowAsync();
-            if ((int)result.Id == 0)
-            {
-                var fileName = (sender as Button).Tag.ToString();
-                await FileManager.DeleteLocalFileAsync($"{fileName}.workspace");
-            }
-
-            this.PopulateWorkspaces();
-        }
-
-        /// <summary>
         /// Sets view state.
         /// </summary>
         /// <param name="state">View state.</param>
@@ -413,7 +353,6 @@ namespace Stream.Views
         }
 
         private StorageFile file;
-        private Configuration.Configuration configuration;
         private readonly WindowController controller;
         private readonly FileReloadTimer timer;
 

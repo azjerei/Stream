@@ -1,0 +1,93 @@
+﻿<UserControl
+    x:Class="Stream.Views.Settings"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Stream.Views"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:mux="using:Microsoft.UI.Xaml.Controls" xmlns:models="using:Stream.Models"
+    mc:Ignorable="d"
+    d:DesignHeight="300"
+    d:DesignWidth="400">
+
+    <Grid x:Name="root" Grid.Row="2" Padding="20" 
+          Background="{ThemeResource SystemChromeMediumLowColor}"
+          Visibility="Collapsed">
+        <!-- Slide & fade animation -->
+        <Grid.Resources>
+            <Storyboard x:Name="SlideInStoryboard">
+                <RepositionThemeAnimation TargetName="root" FromVerticalOffset="-20"/>
+            </Storyboard>
+        </Grid.Resources>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="100"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <TextBlock x:Uid="Menu_Settings" Style="{ThemeResource TitleTextBlockStyle}" Grid.Row="0"/>
+        <Border Grid.Row="1" Margin="0,20,0,0" CornerRadius="4" Padding="4" Height="60"
+                    Background="{ThemeResource SystemAltLowColor}"
+                    BorderBrush="#20000000"
+                    BorderThickness="1">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE771;" VerticalAlignment="Center" Margin="10,0,20,0" Grid.Column="0"/>
+                <TextBlock x:Uid="Settings_Theme" Style="{ThemeResource SubtitleTextBlockStyle}" 
+                               VerticalAlignment="Center" HorizontalAlignment="Left"
+                               Grid.Column="1"/>
+                <mux:DropDownButton VerticalAlignment="Center" MinWidth="120" Grid.Column="2" Margin="0,0,10,0"
+                                        Content="{x:Bind Path=configuration.Theme}">
+                    <mux:DropDownButton.Flyout>
+                        <MenuFlyout Placement="Bottom">
+                            <MenuFlyoutItem x:Uid="Settings_ThemeDark" Tag="Dark" Click="ThemeChecked"/>
+                            <MenuFlyoutItem x:Uid="Settings_ThemeLight" Tag="Light" Click="ThemeChecked"/>
+                            <MenuFlyoutItem x:Uid="Settings_ThemeSystem" Tag="System" Click="ThemeChecked"/>
+                        </MenuFlyout>
+                    </mux:DropDownButton.Flyout>
+                </mux:DropDownButton>
+            </Grid>
+        </Border>
+        <Border Grid.Row="2" Margin="0,20,0,0" CornerRadius="4" Padding="4"
+                    Background="{ThemeResource SystemAltLowColor}"
+                    BorderBrush="#20000000"
+                    BorderThickness="1">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="22"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <SymbolIcon Symbol="DockBottom" Margin="12,16,20,0" Grid.Column="0" Grid.Row="0" VerticalAlignment="Center"/>
+                <TextBlock x:Uid="Settings_Workspaces" Style="{ThemeResource SubtitleTextBlockStyle}" 
+                               VerticalAlignment="Center" HorizontalAlignment="Left" Margin="0,14,0,0"
+                               Grid.Column="1" Grid.Row="0"/>
+                <Line Stroke="#20000000" X1="0" X2="8000" Y1="0" Y2="0" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3"
+                          Margin="0,20,0,0"/>
+                <ListView x:Name="workspaces" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3" Margin="0,1,0,0"
+                          ItemsSource="{x:Bind Path=Workspaces}">
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <Grid Padding="10">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Text="{Binding Name}" Grid.Column="0" VerticalAlignment="Center"/>
+                                <Button x:Uid="Button_Remove" Grid.Column="1" Click="RemoveWorkspaceAsync"
+                                            Tag="{Binding Name}"/>
+                            </Grid>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+            </Grid>
+        </Border>
+    </Grid>
+</UserControl>
