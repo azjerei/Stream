@@ -175,6 +175,12 @@ namespace Stream.Components
                 this.TextContent.SelectedItem = item.First();
                 this.TextContent.ScrollIntoView(this.TextContent.SelectedItem);
             }
+            else
+            {
+                // Make sure to deselect any previously selected item
+                // if there is no new item to select to avoid confusion.
+                this.TextContent.SelectedItem = null;
+            }
         }
 
         /// <summary>
